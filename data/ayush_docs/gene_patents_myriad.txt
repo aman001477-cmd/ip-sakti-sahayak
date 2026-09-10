@@ -1,0 +1,34 @@
+GENE PATENTING WORLDWIDE — MYRIAD (USA) AND D'ARCY (AUSTRALIA)
+Comparative Biotech Patent Law | Relevance for India's Section 3(c)/3(j)
+
+1. ASSOCIATION FOR MOLECULAR PATHOLOGY v. MYRIAD GENETICS (US SUPREME COURT, 2013)
+Myriad held patents on isolated BRCA1/BRCA2 gene sequences for breast-cancer testing. The Court
+held UNANIMOUSLY:
+(a) Merely ISOLATED genomic DNA is a product of nature and NOT patent-eligible — separation
+    from the genome does not create an invention.
+(b) Synthetically created COMPLIMENTARY DNA (cDNA) IS patent-eligible because a lab technician
+    creates something new.
+The decision ended gene-sequence monopolies on diagnostics while preserving engineered-construct
+patents.
+
+2. D'ARCY v. MYRIAD GENETICS (HIGH COURT OF AUSTRALIA, 2015)
+On the same BRCA patents, Australia's apex court held unanimously that isolated nucleic acids —
+even separated from cells — are NOT a "manner of manufacture": the substance and information are
+the same as in nature, so no patentable invention exists.
+
+3. EUROPEAN POSITION
+Under the EU Biotech Directive (98/44/EC), an isolated element of the human body INCLUDING gene
+sequences CAN be patented where a specific industrial application is disclosed — a middle path
+between the US/Australian rejections and permissive practice.
+
+4. INDIAN LENS (COMMENTARY POSITION)
+(a) Section 3(c) bars mere discovery of living/non-living substances occurring in nature —
+    commentators generally view bare isolated human gene sequences as falling here.
+(b) Section 3(j) bars plants/animals/seeds but EXCEPTS micro-organisms; engineered constructs,
+    vectors, modified cell lines and microbiological processes remain patentable.
+(c) Diagnostic METHOD claims face Section 3(i); diagnostic KITS as products are examined on
+    novelty, inventive step and industrial application.
+
+5. KEYWORDS
+Myriad BRCA, isolated DNA product of nature, cDNA patentable, D'Arcy Australia manner of
+manufacture, EU Biotech Directive, Section 3(c), gene sequence, diagnostics.

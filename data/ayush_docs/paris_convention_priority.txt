@@ -1,0 +1,38 @@
+PARIS CONVENTION (1883) — PRIORITY AND NATIONAL TREATMENT EXPLAINED
+Paris Convention for the Protection of Industrial Property | International IP Framework
+
+1. WHAT IT IS
+The Paris Convention (1883, administered by WIPO) is the foundational treaty for patents,
+trademarks and industrial designs, with 180+ member countries including India. Much of the
+Indian Patents Act's international machinery (Sections 133–135 on convention countries and
+priority) implements this treaty.
+
+2. NATIONAL TREATMENT (ARTICLE 2)
+Nationals of any member country enjoy the same IP protection in every other member country as
+that country's own nationals — no discrimination against foreigners.
+
+3. RIGHT OF PRIORITY (ARTICLE 4) — THE CORE FOR PATENT FILERS
+(a) A patent application first filed in one member country gives a 12-MONTH priority window
+    (6 months for designs and trademarks) to file in other member countries.
+(b) The later filings are treated AS IF filed on the first (priority) date — intervening
+    publications or filings by others cannot destroy novelty.
+(c) Indian practice: claim convention priority via Form 1 + priority documents; India also
+    recognises PCT international filing dates for national-phase entries.
+
+4. INDEPENDENCE OF PATENTS (ARTICLE 4bis)
+A patent granted in one country is independent of patents for the same invention elsewhere —
+rejection or revocation in one country does not affect others.
+
+5. COMPULSORY LICENCES (ARTICLE 5A)
+The Convention expressly permits compulsory licences to prevent patent abuses (e.g., failure to
+work) — the international ancestor of India's Section 84/92 regime — with safeguards such as
+waiting periods (4 years from filing or 3 years from grant).
+
+6. OTHER PILLARS
+Protection of well-known marks (Article 6bis — basis of India's well-known trademarks), no
+forfeiture for importation of patented articles, inventor's right to be named (moral right),
+and temporary protection at international exhibitions.
+
+7. KEYWORDS
+Paris Convention, priority 12 months, national treatment, convention country Section 133,
+independence of patents, Article 5A, well-known marks, exhibition priority.

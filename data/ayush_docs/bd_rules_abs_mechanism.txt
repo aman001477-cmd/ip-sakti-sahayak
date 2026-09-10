@@ -1,0 +1,40 @@
+BIODIVERSITY RULES 2004 & ABS MECHANISM — HOW APPROVALS ACTUALLY WORK
+Biological Diversity Rules, 2004 | NBA ABS Regulations, 2014 | 2023 Interface
+
+1. THE THREE-TIER MACHINERY
+(a) NATIONAL BIODIVERSITY AUTHORITY (NBA), Chennai — approvals for foreign entities/persons,
+    IPR applications based on Indian biological resources, and third-party transfers of
+    research results.
+(b) STATE BIODIVERSITY BOARDS (SBBs) — approvals for domestic commercial utilisation and
+    bio-survey within the state.
+(c) BIODIVERSITY MANAGEMENT COMMITTEES (BMCs) — local-body committees maintaining People's
+    Biodiversity Registers (PBRs) and consulted on local access.
+
+2. APPROVAL ROUTES (RULES, 2004)
+Prescribed application forms exist for: access for research/commercial use (foreigners),
+transfer of research results, and IPR applications (Form III category). NBA must decide IPR
+permission applications within a statutory timeline (ninety days under the original scheme);
+SBBs operate parallel state windows.
+
+3. THE 2014 ABS REGULATIONS — MONEY MECHANISM
+The Guidelines on Access to Biological Resources and Associated Knowledge and Benefits Sharing
+Regulations, 2014 introduced a graded, turnover-linked benefit-sharing framework: traders pay a
+smaller fraction while manufacturers pay a higher share of annual gross ex-factory sale value
+of the biological resource (exact slabs are notified in the Regulations and updated guidance —
+always verify the current Gazette text before advising a client). Collectors and local
+communities receive shares through BMC-linked community funds.
+
+4. IPR + NBA CLEARANCE CHECKLIST
+(a) Patent Form-1 declaration on use of Indian biological material.
+(b) NBA permission route BEFORE grant (original scheme) — track current post-2023-amendment
+    procedures, which simplified domestic and AYUSH-adjacent pathways.
+(c) Benefit-sharing terms or exemption basis recorded in the file.
+
+5. 2023 AMENDMENT INTERFACE
+Decriminalisation (penalties adjudicated, NGT appeal), AYUSH-practitioner and cultivated-plant
+relief, and lighter domestic intimation routes — see bd_amendment_2023.txt. Core foreign-access
+and IPR-clearance discipline continues.
+
+6. KEYWORDS
+BD Rules 2004, ABS Regulations 2014, turnover slabs, BMC, PBR, Form III, ninety days, SBB
+approval, community fund, cultivated vs wild.

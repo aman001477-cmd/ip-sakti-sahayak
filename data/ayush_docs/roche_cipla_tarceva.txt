@@ -1,0 +1,37 @@
+ROCHE v. CIPLA (TARCEVA/ERLOCIP) — PUBLIC INTEREST IN PHARMA INJUNCTIONS
+Delhi High Court 2012 | Patent Infringement and Interim Relief
+
+1. BACKGROUND
+Roche held an Indian patent covering Erlotinib, marketed as Tarceva for lung and pancreatic
+cancer, priced at well over Rs. 1 lakh per month of treatment. Cipla launched the generic
+Erlocip at a small fraction of that price. Roche sued for infringement and sought an interim
+injunction to pull Cipla's product off the market during trial.
+
+2. THE 2012 INTERIM ORDER — INJUNCTION REFUSED
+The Delhi High Court declined the interim injunction, applying the classic three-factor test
+with a pharma-specific plus-factor:
+(a) PRIMA FACIE CASE / CREDIBLE VALIDITY CHALLENGE: Cipla raised a serious, arguable challenge
+    to the patent's validity (covering obviousness/prior-art grounds), so the balance on
+    validity was genuinely triable — courts do not grant injunctions lightly where validity is
+    credibly in doubt.
+(b) BALANCE OF CONVENIENCE: weighed with the price gap and patient access in view.
+(c) PUBLIC INTEREST AS A THIRD PILLAR: in life-saving drug disputes, the court expressly
+    factored the public interest in affordable access — an approach later echoed across Indian
+    pharma jurisprudence. Irreparable injury to the patentee was not established to outweigh
+    these considerations.
+
+3. SIGNIFICANCE
+(a) Established that in pharmaceutical injunction suits, PUBLIC INTEREST is an independent
+    consideration alongside prima facie case and balance of convenience.
+(b) Strengthened the litigation toolkit of generic companies: credible validity challenges +
+    access-to-medicine arguments.
+(c) Companion context to Bayer-Natco (compulsory licensing) and Novartis (Section 3(d)) in
+    India's access-to-medicines jurisprudence — three different routes, one policy direction.
+
+4. PRACTICE NOTE
+The dispute also featured a revocation counter-claim and extensive claim-construction
+debate on polymorph/salt coverage — draft pharma specifications and oppositions accordingly.
+
+5. KEYWORDS
+Roche Cipla, Tarceva erlotinib, Erlocip, interim injunction refused, public interest third
+factor, credible validity challenge, balance of convenience, access to medicines.

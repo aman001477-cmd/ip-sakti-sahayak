@@ -48,13 +48,14 @@ def detect_jurisdiction(text: str, filename: str) -> str:
 
     # Deterministic filename overrides (checked before content scoring)
     india_file_keys = [
-        "indian", "india", "biodiversity", "bd_amendment", "gi_", "ppvfr",
-        "tkdl", "ayurveda", "ayush", "novartis", "bayer", "neem",
-        "patent", "neem_patent",
+        "indian", "india", "biodiversity", "bd_amendment", "bd_rules",
+        "gi_", "ppvfr", "tkdl", "ayurveda", "ayush", "novartis", "bayer",
+        "roche", "cipla", "neem", "patent", "trademark", "design",
     ]
     intl_file_keys = [
         "trips", "nagoya", "wipo", "cbd", "pct", "biopiracy",
-        "international",
+        "international", "convention", "paris", "myriad",
+        "cartagena", "biosafety",
     ]
     if any(k in filename_lower for k in india_file_keys):
         return "india"
