@@ -1,0 +1,56 @@
+INDIAN PATENT FILING & PROSECUTION — PRACTICAL GUIDE
+Patents Act, 1970 with the Patent (Amendment) Rules, 2024
+
+1. PRE-FILING
+(a) PRIOR-ART SEARCH: Search Indian Patent Office (InPASSA), WIPO Patentscope, Google Patents and
+    TKDL for traditional-knowledge overlaps before drafting.
+(b) DECIDE PROVISIONAL vs COMPLETE: File a provisional specification (Form 2) to secure a date,
+    then the complete specification within 12 months.
+(c) FOREIGN FILING PERMISSION (Section 39): If all inventors are resident in India, either file
+    first in India or obtain written permission (Form 25) before filing abroad.
+
+2. KEY FORMS
+- Form 1: Application for grant of patent.
+- Form 2: Provisional / complete specification.
+- Form 3: Statement and undertaking on corresponding foreign applications (Section 8) — must be
+  kept updated during prosecution.
+- Form 5: Declaration of inventorship.
+- Form 18 / 18A: Request for examination (ordinary / expedited).
+- Form 26: Power of attorney for patent agents.
+- Form 27: Annual working statement (now once every THREE financial years under the 2024 Rules).
+- Form 30: Miscellaneous petitions including timeline extensions.
+
+3. TIMELINES (POST-2024 RULES)
+(a) PUBLICATION: Automatic at 18 months from priority/filing; early publication on request (Form 9).
+(b) REQUEST FOR EXAMINATION: Within THIRTY-ONE MONTHS from priority date or filing date,
+    whichever is earlier (reduced from 48 months by the 2024 amendment).
+(c) FIRST EXAMINATION REPORT (FER): Reply with amendments/arguments within the prescribed period
+    (extendable on petition with fees); hearings may be held by the Controller.
+(d) GRANT: On meeting all requirements; term is 20 years from the international/date of filing.
+(e) RENEWALS: Annual renewal fees from the 3rd year onward to keep the patent in force.
+
+4. OPPOSITIONS
+(a) PRE-GRANT REPRESENTATION (Section 25(1)): Any person may oppose after publication but before
+    grant on grounds including wrongful obtainment, anticipation, obviousness and Section 3 bars —
+    heavily used by generic companies and NGOs in pharma cases.
+(b) POST-GRANT OPPOSITION (Section 25(2)): Within 12 months of grant publication before an
+    Opposition Board; grounds include Section 3(d)/3(p) and traditional-knowledge bars.
+
+5. 2024 RULES — HEADLINE CHANGES
+(a) RFE window shortened to 31 months (faster prosecution).
+(b) Form 27 working statements consolidated to once every three financial years.
+(c) Streamlined extension-of-time practice with official fees; Controller empowered to condone
+    delays in most timelines.
+(d) Clearer divisional-application practice and revised patent-agent examination framework.
+(e) Jan Vishwas Act, 2023 decriminalised several minor procedural defaults into monetary
+    penalties adjudicated by designated officers.
+
+6. COST INDICATORS (VERIFY CURRENT SCHEDULE I BEFORE FILING)
+Fees are slab-based: lowest for individuals/startups/small entities, higher for large entities;
+foreign applicants pay in USD. Budget heads: filing + publication + examination + hearing +
+grant + annual renewals + agent charges.
+
+7. KEYWORDS FOR RETRIEVAL
+Form 1, Form 2, Form 3, Form 18, Form 26, Form 27, RFE, 31 months, FER, pre-grant opposition,
+post-grant opposition, Section 25, Section 39, foreign filing permission, 2024 Rules, working
+statement, renewal, divisional application, expedited examination.

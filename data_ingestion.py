@@ -44,8 +44,24 @@ SECTION_PATTERNS = {
 }
 
 def detect_jurisdiction(text: str, filename: str) -> str:
-    text_lower = text.lower()
     filename_lower = filename.lower()
+
+    # Deterministic filename overrides (checked before content scoring)
+    india_file_keys = [
+        "indian", "india", "biodiversity", "bd_amendment", "gi_", "ppvfr",
+        "tkdl", "ayurveda", "ayush", "novartis", "bayer", "neem",
+        "patent", "neem_patent",
+    ]
+    intl_file_keys = [
+        "trips", "nagoya", "wipo", "cbd", "pct", "biopiracy",
+        "international",
+    ]
+    if any(k in filename_lower for k in india_file_keys):
+        return "india"
+    if any(k in filename_lower for k in intl_file_keys):
+        return "international"
+
+    text_lower = text.lower()
     
     india_score = sum(1 for kw in JURISDICTION_KEYWORDS["india"] if kw in text_lower or kw in filename_lower)
     intl_score = sum(1 for kw in JURISDICTION_KEYWORDS["international"] if kw in text_lower or kw in filename_lower)

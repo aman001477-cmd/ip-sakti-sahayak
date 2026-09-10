@@ -1,0 +1,49 @@
+NOVARTIS v. UNION OF INDIA (2013) — THE GLIVEC CASE
+Landmark Patent Case Study | Indian Patents Act, Section 3(d)
+
+1. BACKGROUND
+Novartis AG filed a patent application in India (Chennai Patent Office, Application No. 1602/MAS/1998)
+for the beta-crystalline form of Imatinib Mesylate, the active ingredient in the anti-cancer drug
+Glivec/Gleevec used in treating Chronic Myeloid Leukaemia (CML) and gastrointestinal stromal tumours.
+
+Imatinib in its free-base form was disclosed in an earlier 1993 patent (granted in many countries but
+never patented in India, since India did not grant product patents for pharmaceuticals before 2005).
+Novartis claimed the beta-crystalline salt form was a new and patentable invention.
+
+2. REJECTION BY THE PATENT OFFICE (2006)
+The Assistant Controller of Patents, Chennai, rejected the application. Key grounds:
+(a) Section 3(d) — the beta-crystalline form was merely a new form of a known substance (imatinib)
+    without demonstrating significantly enhanced therapeutic efficacy;
+(b) Lack of novelty and inventive step in view of the earlier disclosed imatinib matter.
+
+3. THE LEGAL BATTLE
+- Novartis appealed to the Intellectual Property Appellate Board (IPAB), which in 2009 upheld the
+  rejection on Section 3(d) grounds (while holding the invention novel and non-obvious).
+- Novartis challenged the constitutional validity of Section 3(d) before the Madras High Court,
+  arguing it was vague and TRIPS-incompatible. The High Court upheld Section 3(d).
+- Final appeal reached the Supreme Court of India.
+
+4. SUPREME COURT JUDGMENT (1 APRIL 2013)
+A two-judge bench (Justices Aftab Alam and Ranjana Desai) dismissed Novartis's appeal:
+(a) MEANING OF "EFFICACY" UNDER SECTION 3(d): Efficacy means THERAPEUTIC efficacy, not merely
+    improved physical properties such as solubility, stability, flow properties or bioavailability.
+    Novartis showed about 30% higher bioavailability but no evidence of enhanced therapeutic effect.
+(b) EVERGREENING: The Court held that Section 3(d) was specifically designed to prevent
+    "evergreening" — extending patent monopolies through minor modifications of known drugs.
+(c) TRIPS COMPATIBILITY: The Court held that Article 27 of TRIPS gives member countries the freedom
+    to define the criteria of patentability (novelty, inventive step, industrial application) for
+    themselves. Section 3(d) is a permissible domestic standard.
+(d) The claimed invention therefore failed the test of Section 3(d) and no patent could be granted.
+
+5. SIGNIFICANCE
+- Confirmed India as the global leader in preventing pharmaceutical evergreening.
+- Protected access to affordable medicines: generic imatinib (by Natco, Cipla and others) costs a
+  small fraction of the patented drug's price.
+- Section 3(d) became the most debated provision of Indian patent law worldwide.
+- The judgment is routinely cited in patent examinations and oppositions involving pharmaceutical
+  derivatives (salts, polymorphs, isomers, combinations).
+
+6. KEYWORDS FOR RETRIEVAL
+Section 3(d), evergreening, efficacy, therapeutic efficacy, polymorph, beta-crystalline,
+imatinib mesylate, Glivec, Gleevec, product patent, pharmaceutical patent, Supreme Court 2013,
+inventive step, TRIPS Article 27, access to medicines.

@@ -1,0 +1,46 @@
+PCT INTERNATIONAL PATENT FILING — GUIDE FOR INDIAN APPLICANTS
+Patent Cooperation Treaty (WIPO), International Phase and National Phase
+
+1. WHAT IS THE PCT?
+The Patent Cooperation Treaty, administered by WIPO, lets an applicant seek patent protection in
+150+ contracting states through ONE international application instead of many separate national
+filings. India has been a PCT member since 1998. The PCT does NOT itself grant an "international
+patent" — grant decisions stay with each national/regional office.
+
+2. WHY INDIAN APPLICANTS USE IT
+(a) DEFERS COSTS: National-phase fees and translations are postponed up to 30/31 months from the
+    priority date, giving time to assess commercial value.
+(b) ONE SEARCH: A single International Search Report (ISR) with written opinion previews
+    patentability before expensive national filings.
+(c) STRATEGIC: Useful for pharma, biotech, AYUSH-derived formulations and engineering inventions
+    targeting US, EP, JP, CN and other markets alongside India.
+
+3. THE INTERNATIONAL PHASE (MONTHS 0–30)
+(a) FILING: File with the Receiving Office — Indian applicants may file at RO/IN (Indian Patent
+    Office acting as receiving Office) or directly at RO/IB (WIPO), claiming priority from the
+    earlier Indian application within 12 months.
+(b) INTERNATIONAL SEARCH (Chapter I): An International Searching Authority (ISA) issues the ISR
+    and written opinion (~16 months from priority).
+(c) PUBLICATION: WIPO publishes the application at 18 months from priority.
+(d) OPTIONAL CHAPTER II: File a Demand for international preliminary examination to get an
+    International Preliminary Report on Patentability and extra time to amend claims.
+
+4. NATIONAL PHASE (BY ~31 MONTHS)
+Enter each desired country before its deadline — in India, 31 months from priority — by paying
+national fees, furnishing translations, and appointing local agents. Indian national-phase
+applications then undergo normal examination (request, FER, hearing, grant) under the Patents
+Act, 1970, including Sections 3(d)/3(p) scrutiny for pharma and TK-linked inventions.
+
+5. COST STRUCTURE (INDICATIVE)
+International filing fee + search fee + handling fee (payable in CHF/USD equivalents), then
+per-country national fees, translations and attorney charges. ePCT electronic filing reduces fees
+and paperwork.
+
+6. INTERPLAY WITH INDIAN LAW
+Remember Section 39 (foreign filing permission for resident inventors), Section 8 (duty to
+inform the Controller of corresponding foreign/PCT applications via Form 3), and TKDL/Biodiversity
+Act clearance where biological resources or traditional knowledge are involved.
+
+7. KEYWORDS FOR RETRIEVAL
+PCT, WIPO, international application, priority 12 months, receiving office, ISA, ISR, Chapter II
+demand, national phase 31 months, ePCT, Budapest Treaty microorganisms, Section 39, Form 3.

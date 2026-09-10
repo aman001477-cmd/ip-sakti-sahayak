@@ -1,0 +1,47 @@
+BAYER v. NATCO (2012) — INDIA'S FIRST COMPULSORY LICENCE
+Landmark Patent Case Study | Indian Patents Act, Section 84
+
+1. BACKGROUND
+Bayer Corporation held Indian Patent No. 215758 for Sorafenib Tosylate, marketed as Nexavar, a drug
+used in the treatment of advanced kidney cancer and liver cancer. The patented drug was sold in India
+at approximately Rs. 2,80,000 per month of treatment, imported rather than manufactured in India.
+
+Natco Pharma, an Indian generic manufacturer, applied to the Controller General of Patents for a
+compulsory licence under Section 84 of the Patents Act, 1970, to manufacture and sell a generic
+version at about Rs. 8,800 per month.
+
+2. GROUNDS UNDER SECTION 84
+Section 84 permits any interested person to seek a compulsory licence after three years from grant
+where:
+(a) the reasonable requirements of the public with respect to the patented invention have not been
+    satisfied; OR
+(b) the patented invention is not available to the public at a reasonably affordable price; OR
+(c) the patented invention is not worked in the territory of India.
+
+3. CONTROLLER'S DECISION (9 MARCH 2012)
+The Controller granted India's first post-TRIPS compulsory licence to Natco, holding that all three
+conditions were satisfied:
+(a) PUBLIC REQUIREMENTS NOT MET: Only a tiny fraction of eligible patients could access Nexavar;
+    Bayer's own data showed negligible sales volumes against the estimated patient population.
+(b) NOT AFFORDABLY PRICED: Rs. 2.8 lakh per month was beyond the reach of the public; Natco's
+    Rs. 8,800 price made treatment accessible.
+(c) NOT WORKED IN INDIA: Bayer only imported the drug; mere importation, without local
+    manufacturing supported by reasons, did not amount to "working" in India.
+Royalty was fixed at 6% of net sales (later enhanced to 7% by the IPAB in 2013).
+
+4. APPEALS AND OUTCOME
+- The IPAB (2013) upheld the licence with enhanced 7% royalty.
+- The Bombay High Court (2014) upheld the grant, confirming that "worked in India" generally means
+  local manufacturing and that import alone is insufficient without justification.
+- The licence ran its course and demonstrated that the compulsory-licensing mechanism is workable.
+
+5. SIGNIFICANCE
+- Established the practical interpretation of Section 84's three grounds.
+- Clarified that "working" a patent in India ordinarily requires local manufacture, not mere import.
+- Balanced patentee rights with public health; widely studied as a model TRIPS-flexibility use.
+- Companion litigation (Bayer v. Cipla infringement suit over the same drug) clarified the line
+  between lawful compulsory licensing and infringement.
+
+6. KEYWORDS FOR RETRIEVAL
+Compulsory licence, Section 84, Nexavar, sorafenib, Bayer, Natco, affordable price, worked in India,
+public requirements, royalty, IPAB, public health, TRIPS flexibilities, Doha Declaration.
