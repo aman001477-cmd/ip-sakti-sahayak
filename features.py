@@ -452,7 +452,7 @@ def get_voice_controls_html(input_key: str = "voice-input", button_id: str = "vo
 def process_uploaded_file(uploaded_file) -> Dict[str, Any]:
     """Process uploaded file (PDF, image, text) and extract content"""
     result = {
-        "filename": uploaded_file.name,
+        "name": uploaded_file.name,
         "type": uploaded_file.type,
         "text": "",
         "pages": 0,
