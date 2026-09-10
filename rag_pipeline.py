@@ -37,9 +37,76 @@ GREETING_REPLY = (
 )
 
 
+TEAM_PATTERNS = (
+    "kisne banaya",
+    "banane wale",
+    "who made you",
+    "who created you",
+    "who developed you",
+    "who built you",
+    "who made this",
+    "who created this",
+    "who developed this",
+    "who built this",
+    "your creator",
+    "your developer",
+    "your founder",
+    "your team",
+    "team members",
+    "about your team",
+    "team nexus",
+    "tumhe kisne",
+    "tujhe kisne",
+    "tumko kisne",
+    "aapko kisne",
+    "ye app kisne",
+    "is app ko kisne",
+    "app banaya",
+)
+
+TEAM_REPLY_HINGLISH = (
+    "Main hoon **IP-SAKTI Sahayak** 🏛️ — mujhe banaya hai **Team NEXUS** ne, "
+    "**SIH 2026** ke liye, **NIELIT Gorakhpur** me!\n\n"
+    "**Team:**\n"
+    "- **Aman** (Team Leader)\n"
+    "- Priyanshu\n"
+    "- Shubham\n"
+    "- Amarjeet\n"
+    "- Anuradha\n"
+    "- Mansi\n\n"
+    "Patents, biodiversity aur traditional knowledge ka expert hoon — bolo, kya puchna hai?"
+)
+
+TEAM_REPLY_ENGLISH = (
+    "I am **IP-SAKTI Sahayak** 🏛️ — built by **Team NEXUS** for **SIH 2026** "
+    "at **NIELIT Gorakhpur**!\n\n"
+    "**Team:**\n"
+    "- **Aman** (Team Leader)\n"
+    "- Priyanshu\n"
+    "- Shubham\n"
+    "- Amarjeet\n"
+    "- Anuradha\n"
+    "- Mansi\n\n"
+    "I'm an expert on patents, biodiversity and traditional knowledge — what would you like to ask?"
+)
+
+
 def _is_greeting(text: str) -> bool:
     cleaned = re.sub(r"[^a-z ]", "", text.lower()).strip()
     return cleaned in GREETINGS
+
+
+def _is_team_question(text: str) -> bool:
+    cleaned = re.sub(r"[^a-z ]", " ", text.lower())
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return any(p in cleaned for p in TEAM_PATTERNS)
+
+
+def _team_reply(text: str) -> str:
+    cleaned = re.sub(r"[^a-z ]", " ", text.lower())
+    if re.search(r"kisne|banaya|tumhe|tujhe|tumko|aapko|kaun|kya|\bhai\b|aur|kaise", cleaned):
+        return TEAM_REPLY_HINGLISH
+    return TEAM_REPLY_ENGLISH
 
 
 def _is_retryable(exc: Exception) -> bool:
@@ -69,6 +136,9 @@ B. CASUAL / JOKE / OFF-TOPIC QUESTIONS (timepass, movies, cricket, love life, "t
 4. Keep it SHORT (2-4 lines).
 5. End by redirecting to your expertise with a smile (patents, Section 3(d), Neem case, Nagoya, etc.).
 6. If the user teases or insults you, take it sportingly, fire back ONE clean witty line, then redirect.
+
+C. IDENTITY / TEAM QUESTIONS (who made you, your team, members, SIH, NIELIT):
+Answer warmly with these EXACT facts: you are IP-SAKTI Sahayak, built by Team NEXUS for SIH (Smart India Hackathon) 2026 at NIELIT Gorakhpur. Team Leader: Aman. Members: Priyanshu, Shubham, Amarjeet, Anuradha, Mansi. Keep it short, then offer IP help.
 
 Context: {context}
 
@@ -155,7 +225,9 @@ class RAGPipeline:
         reraise=True
     )
     def query(self, question: str, jurisdiction: Optional[str] = None) -> Dict:
-        # Fast path: greetings need no API call
+        # Fast paths: team questions and greetings need no API call
+        if _is_team_question(question):
+            return {"answer": _team_reply(question), "sources": []}
         if _is_greeting(question):
             return {"answer": GREETING_REPLY, "sources": []}
 
