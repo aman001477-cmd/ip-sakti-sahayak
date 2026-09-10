@@ -32,6 +32,20 @@ def transcribe_audio(data: bytes) -> str:
     resp.raise_for_status()
     return (resp.json().get("text") or "").strip()
 
+
+def speak_answer(text: str) -> bytes:
+    """Text-to-speech on the server (gTTS) — returns MP3 bytes for st.audio."""
+    import re
+
+    from gtts import gTTS
+
+    clean = re.sub(r"[*_#`>\[\]()|]", "", text).strip()[:800]
+    lang = "hi" if re.search(r"[\u0900-\u097F]", clean) else "en"
+    buf = io.BytesIO()
+    gTTS(text=clean, lang=lang, slow=False).write_to_fp(buf)
+    buf.seek(0)
+    return buf.read()
+
 st.set_page_config(
     page_title="IP-SAKTI Sahayak",
     page_icon="🏛️",
@@ -612,9 +626,16 @@ for idx, msg in enumerate(st.session_state.messages):
                     mime="application/pdf", key=f"dl_{idx}",
                 )
         with b2:
-            if st.button("🔊 Speak", key=f"speak_{idx}", use_container_width=True):
-                safe = msg["content"][:500].replace("`", "'").replace('"', "'")
-                st.components.v1.html(f"<script>speakText(`{safe}`);</script>", height=0)
+            if st.button("🔊 Listen", key=f"speak_{idx}", use_container_width=True):
+                with st.spinner("Generating voice…"):
+                    try:
+                        st.session_state[f"audio_{idx}"] = speak_answer(msg["content"])
+                    except Exception as e:
+                        st.error(f"Voice failed: {e}")
+                st.rerun()
+        akey = f"audio_{idx}"
+        if st.session_state.get(akey):
+            st.audio(st.session_state[akey], format="audio/mp3")
         if msg.get("sources"):
             render_sources(msg["sources"])
 
