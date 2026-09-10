@@ -1,7 +1,8 @@
 import os
 import logging
+import re
 from typing import Dict, List, Optional
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception
 
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -15,6 +16,38 @@ EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 LLM_MODEL = "qwen/qwen3.8-27b"
 TOP_K = 3
 TEMPERATURE = 0.1
+MAX_TOKENS = 800  # Groq free on_demand tier allows max 1000 output tokens/min
+
+# Simple greetings answered locally (no API call → saves quota)
+GREETINGS = {
+    "hi", "hii", "hiii", "hello", "helo", "hey", "yo", "namaste",
+    "namaskar", "good morning", "good afternoon", "good evening",
+    "good day", "namastey", "hello!", "hi!", "hey!", "salam",
+}
+
+GREETING_REPLY = (
+    "Hello! I am **IP-SAKTI Sahayak**, your AI assistant for Intellectual "
+    "Property Rights.\n\n"
+    "Ask me about:\n"
+    "- Indian Patents Act (e.g. Section 3(p), Section 3(d))\n"
+    "- Biodiversity Act & benefit sharing\n"
+    "- Traditional Knowledge / TKDL cases (Neem, Turmeric, Basmati)\n"
+    "- WIPO, Nagoya Protocol, TRIPS\n\n"
+    "How can I help you today?"
+)
+
+
+def _is_greeting(text: str) -> bool:
+    cleaned = re.sub(r"[^a-z ]", "", text.lower()).strip()
+    return cleaned in GREETINGS
+
+
+def _is_retryable(exc: Exception) -> bool:
+    """Never retry rate-limit errors — retrying only burns more quota."""
+    msg = str(exc).lower()
+    if "429" in msg or "rate_limit" in msg or "rate limit" in msg:
+        return False
+    return True
 
 PROMPT_TEMPLATE = """You are IP-SAKTI Sahayak, an expert AI assistant for Intellectual Property Rights specializing in Indian Patents Act, Biodiversity Act, Traditional Knowledge, and International IP Treaties (WIPO, Nagoya Protocol, TRIPS).
 
@@ -82,7 +115,7 @@ class RAGPipeline:
                 groq_api_key=api_key,
                 model_name=LLM_MODEL,
                 temperature=TEMPERATURE,
-                max_tokens=1024
+                max_tokens=MAX_TOKENS
             )
             
             prompt = PromptTemplate(
@@ -108,11 +141,15 @@ class RAGPipeline:
     
     @retry(
         wait=wait_exponential(multiplier=1, min=2, max=10),
-        stop=stop_after_attempt(3),
-        retry=retry_if_exception_type((Exception,)),
+        stop=stop_after_attempt(2),
+        retry=retry_if_exception(_is_retryable),
         reraise=True
     )
     def query(self, question: str, jurisdiction: Optional[str] = None) -> Dict:
+        # Fast path: greetings need no API call
+        if _is_greeting(question):
+            return {"answer": GREETING_REPLY, "sources": []}
+
         try:
             retriever_kwargs = {"k": TOP_K}
             if jurisdiction:
@@ -153,7 +190,7 @@ class RAGPipeline:
             
             if "429" in error_msg or "rate_limit" in error_msg.lower():
                 return {
-                    "answer": "⚠️ Too many requests! Please wait a moment and try again.",
+                    "answer": "⚠️ Free API limit reached. Please wait about a minute and try again.",
                     "sources": []
                 }
             elif "tokens" in error_msg.lower():
