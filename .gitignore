@@ -30,6 +30,9 @@ Thumbs.db
 # App runtime logs (user feedback, never commit)
 feedback_log.jsonl
 
+# Local answer cache (rebuilds itself, never commit)
+answer_cache.json
+
 # Data files (large)
 vector_db/
 data/ayush_docs/*.pdf

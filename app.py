@@ -820,6 +820,8 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
             unsafe_allow_html=True,
         )
         result = query_rag(last_msg + file_context, st.session_state.jurisdiction)
+        if result.get("cached"):
+            st.caption("⚡ Instant answer — served from cache, zero API cost")
         st.write(result["answer"])
         if PDF_AVAILABLE and st.button("📄 Save as PDF", key="pdf_new", use_container_width=True):
             pdf_bytes = generate_patent_report(
@@ -838,6 +840,7 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
         "role": "assistant",
         "content": result["answer"],
         "sources": result["sources"],
+        "cached": result.get("cached", False),
     })
     st.rerun()
 

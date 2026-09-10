@@ -1,5 +1,7 @@
-import os
+import hashlib
+import json
 import logging
+import os
 import re
 from typing import Dict, List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception
@@ -174,6 +176,34 @@ def search_web(query: str) -> str:
     return ""
 
 
+CACHE_FILE = "answer_cache.json"
+CACHE_MAX_ENTRIES = 300
+
+
+def _cache_key(question: str, jurisdiction: Optional[str]) -> str:
+    norm = re.sub(r"\s+", " ", question.lower()).strip()
+    return hashlib.sha256(f"{jurisdiction or 'all'}::{norm}".encode()).hexdigest()[:32]
+
+
+def _load_cache() -> dict:
+    try:
+        with open(CACHE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_cache(cache: dict) -> None:
+    try:
+        while len(cache) > CACHE_MAX_ENTRIES:
+            cache.pop(next(iter(cache)))
+        with open(CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False)
+    except Exception as e:
+        logger.warning("Cache save failed: %s", str(e))
+
+
 class RAGPipeline:
     def __init__(self):
         self.vectorstore = None
@@ -231,6 +261,13 @@ class RAGPipeline:
         if _is_greeting(question):
             return {"answer": GREETING_REPLY, "sources": []}
 
+        # Answer cache: instant replies for repeated questions (zero Groq quota)
+        key = _cache_key(question, jurisdiction)
+        cache = _load_cache()
+        if key in cache:
+            hit = cache[key]
+            return {"answer": hit["answer"], "sources": hit.get("sources", []), "cached": True}
+
         try:
             retriever_kwargs = {"k": TOP_K}
             if jurisdiction:
@@ -261,10 +298,14 @@ class RAGPipeline:
                     "content_preview": doc.page_content[:150] + "..." if len(doc.page_content) > 150 else doc.page_content
                 })
             
-            return {
+            result_dict = {
                 "answer": answer,
-                "sources": sources
+                "sources": sources,
+                "cached": False,
             }
+            cache[key] = {"answer": answer, "sources": sources}
+            _save_cache(cache)
+            return result_dict
         except Exception as e:
             error_msg = str(e)
             logger.error("Query failed: %s", error_msg)
