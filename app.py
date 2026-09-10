@@ -354,56 +354,137 @@ section[data-testid="stSidebar"] { background: #070709 !important; border-right:
 # ---------------- Intro splash (once per session) ----------------
 if not st.session_state.intro_seen:
     st.session_state.intro_seen = True
-    st.components.v1.html("""
+    try:
+        _kb_n = len([f for f in os.listdir("data/ayush_docs") if not f.startswith(".")])
+    except Exception:
+        _kb_n = 29
+    _splash = """
     <div id="intro-splash" onclick="this.remove()">
-      <div class="intro-inner">
-        <div class="intro-emblem"><div class="intro-ring"></div><div class="intro-core">🏛️</div></div>
-        <div class="intro-title">IP-SAKTI Sahayak</div>
-        <div class="intro-sub">Ministry of Ayush &nbsp;•&nbsp; <b>SIH 2026</b> &nbsp;•&nbsp; Team NEXUS</div>
-        <div class="intro-bar"><span></span></div>
-        <div class="intro-status">Loading knowledge base… connecting secure channels…</div>
-        <div class="intro-tap">tap anywhere to enter</div>
+      <div class="boot">
+        <div class="boot-head">SAHAYAK<span>.OS</span><em>v2.0</em></div>
+        <div class="boot-lines">
+          <div>> Initializing legal core <b class="ok">OK</b></div>
+          <div>> Mounting knowledge base — __DOCS__ sources <b class="ok">OK</b></div>
+          <div>> Linking neural engine (Groq) <b class="ok">OK</b></div>
+          <div>> Calibrating IN / INTL filters <b class="ok">OK</b></div>
+          <div>> All systems nominal — welcome, counsellor <b class="blink">▊</b></div>
+        </div>
+        <div class="boot-bar"><span></span></div>
+        <div class="boot-tap">tap anywhere to skip</div>
       </div>
     </div>
     <style>
-      #intro-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
-        background:radial-gradient(ellipse at 50% 35%,#101014 0%,#000 65%);transition:opacity .8s ease;cursor:pointer}
+      #intro-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#020203;transition:opacity .7s ease;cursor:pointer}
       #intro-splash.hide{opacity:0;pointer-events:none}
-      .intro-inner{text-align:center;padding:2rem;max-width:560px;font-family:Inter,sans-serif}
-      .intro-emblem{position:relative;width:110px;height:110px;margin:0 auto 1.4rem}
-      .intro-ring{position:absolute;inset:0;border-radius:50%;
-        background:conic-gradient(from 0deg,#FF9933,#FFD700,#138808,#FF9933);animation:spin 2.4s linear infinite}
-      .intro-core{position:absolute;inset:7px;border-radius:50%;background:#0a0a0c;display:flex;align-items:center;
-        justify-content:center;font-size:2.6rem;box-shadow:inset 0 0 24px rgba(255,153,51,.25);animation:corePulse 2.4s ease-in-out infinite}
-      @keyframes spin{to{transform:rotate(360deg)}}
-      @keyframes corePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-      .intro-title{font-size:2.4rem;font-weight:700;letter-spacing:.5px;margin-bottom:.4rem;
-        background:linear-gradient(100deg,#fff 20%,#FF9933 40%,#FFD700 50%,#7ddf8e 60%,#fff 80%);
-        background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-        animation:shimmer 3s linear infinite}
-      @keyframes shimmer{to{background-position:250% center}}
-      .intro-sub{color:#9A9AA3;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.8rem}
-      .intro-sub b{color:#FF9933}
-      .intro-bar{height:4px;border-radius:4px;background:#1c1c20;overflow:hidden;margin:0 auto 1rem;max-width:340px}
-      .intro-bar span{display:block;height:100%;width:0;border-radius:4px;
-        background:linear-gradient(90deg,#FF9933,#FFD700,#138808);animation:load 3.4s ease forwards}
+      .boot{width:min(520px,88vw);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;text-align:left}
+      .boot-head{font-size:1.1rem;font-weight:800;letter-spacing:4px;color:#fff;margin-bottom:1.1rem}
+      .boot-head span{background:linear-gradient(90deg,#FF9933,#FFD700);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+      .boot-head em{font-style:normal;font-size:.68rem;color:#555;letter-spacing:2px;margin-left:.5rem}
+      .boot-lines div{opacity:0;color:#9a9aa3;font-size:.82rem;margin:.45rem 0;animation:bin .3s ease forwards}
+      .boot-lines div:nth-child(1){animation-delay:.2s}.boot-lines div:nth-child(2){animation-delay:.8s}
+      .boot-lines div:nth-child(3){animation-delay:1.5s}.boot-lines div:nth-child(4){animation-delay:2.1s}
+      .boot-lines div:nth-child(5){animation-delay:2.7s;color:#e8e8ec}
+      @keyframes bin{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+      .boot-lines .ok{color:#4ade80}.boot-lines .blink{color:#FF9933;animation:blink 1s steps(1) infinite}
+      @keyframes blink{50%{opacity:0}}
+      .boot-bar{height:3px;background:#15151a;border-radius:3px;margin-top:1.2rem;overflow:hidden}
+      .boot-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#FF9933,#FFD700,#138808);animation:load 3.6s ease forwards}
       @keyframes load{to{width:100%}}
-      .intro-status{color:#5C5C66;font-size:.78rem}
-      .intro-tap{margin-top:1.2rem;color:#3d3d46;font-size:.72rem}
+      .boot-tap{margin-top:.9rem;color:#3a3a42;font-size:.7rem;font-family:Inter,sans-serif}
     </style>
     <script>
-      setTimeout(function(){
-        var s = document.getElementById('intro-splash');
-        if (s) { s.classList.add('hide'); setTimeout(function(){ s.remove(); }, 850); }
-      }, 4200);
+      setTimeout(function(){var s=document.getElementById('intro-splash');if(s){s.classList.add('hide');setTimeout(function(){s.remove();},750);}},4600);
     </script>
-    """, height=0)
+    """.replace("__DOCS__", str(_kb_n))
+    st.components.v1.html(_splash, height=0)
 
 # ---------------- Ambient background ----------------
 st.markdown(
-    '<div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>',
+    '<div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>'
+    '<div class="aurora"></div><div class="gridlines"></div>',
     unsafe_allow_html=True,
 )
+
+st.markdown("""
+<style>
+/* ===== futuristic layer ===== */
+::selection { background: rgba(255,153,51,.45); color: #fff; }
+.stApp { background: #000 !important; }
+.aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(900px 500px at 12% -5%, rgba(255,122,0,.10), transparent 60%),
+      radial-gradient(800px 500px at 88% 8%, rgba(20,160,60,.10), transparent 60%),
+      radial-gradient(700px 700px at 50% 110%, rgba(255,215,0,.05), transparent 60%); }
+.gridlines { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .55;
+    background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 20%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 20%, #000 30%, transparent 75%); }
+.orb { z-index: 0; }
+.main .block-container, section[data-testid="stSidebar"] { position: relative; z-index: 1; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80;
+    box-shadow: 0 0 0 0 rgba(74,222,128,.6); animation: ringpulse 2s ease-out infinite; }
+@keyframes ringpulse { 70% { box-shadow: 0 0 0 9px rgba(74,222,128,0); } 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); } }
+.sys-chip { display: inline-flex; align-items: center; gap: .4rem; padding: .34rem .8rem;
+    border-radius: 100px; font-size: .7rem; font-weight: 600; color: #b9b9c2;
+    background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.09); }
+.sys-chip b { color: #fff; }
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem;
+    margin: 1.4rem auto 0; max-width: 620px; }
+.stat-card { position: relative; overflow: hidden; border-radius: 16px; padding: .9rem .5rem;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+    border: 1px solid rgba(255,255,255,.09); transition: transform .25s ease, box-shadow .25s ease; }
+.stat-card:hover { transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(255,153,51,.25); }
+.stat-card::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.09), transparent);
+    transform: skewX(-18deg); animation: shine 5s ease infinite; }
+@keyframes shine { 0%,60% { left: -60%; } 100% { left: 160%; } }
+.stat-num { font-size: 1.45rem; font-weight: 800;
+    background: linear-gradient(90deg,#FF9933,#FFD700);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-cap { font-size: .62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.4px; margin-top: .15rem; }
+.ai-head { display: flex; align-items: center; gap: .5rem; margin-bottom: .55rem; padding-bottom: .55rem;
+    border-bottom: 1px solid rgba(255,255,255,.08); font-size: .68rem; font-weight: 800;
+    letter-spacing: 1.6px; color: #8f8f99; }
+.ai-head .live { margin-left: auto; display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .62rem; color: #4ade80; letter-spacing: 1px; }
+.ai-head .live i { width: 6px; height: 6px; border-radius: 50%; background: #4ade80;
+    box-shadow: 0 0 8px #4ade80; animation: blink 1.6s ease infinite; }
+.msg-meta { margin-top: .6rem; font-size: .64rem; color: var(--faint); display: flex; gap: .6rem; align-items: center; }
+.msg-meta .model { padding: 1px 7px; border-radius: 5px; background: rgba(255,153,51,.1);
+    border: 1px solid rgba(255,153,51,.25); color: #FFB25E; font-weight: 700; }
+.source-item { position: relative; counter-increment: src; }
+.sources { counter-reset: src; }
+.source-item::before { content: '0' counter(src); position: absolute; right: .7rem; top: .45rem;
+    font-size: .68rem; font-weight: 800; color: rgba(255,255,255,.14); letter-spacing: 1px; }
+.rel { height: 3px; border-radius: 3px; background: #222228; margin-top: .5rem; overflow: hidden; }
+.rel span { display: block; height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, #FF9933, #138808); animation: relfill 1s ease both; }
+@keyframes relfill { from { width: 0 !important; } }
+.hist { position: relative; margin-left: .55rem !important; padding-left: .9rem !important;
+    border: none !important; border-left: 1px solid rgba(255,255,255,.1) !important;
+    border-radius: 0 !important; background: transparent !important; }
+.hist::before { content: ''; position: absolute; left: -3.5px; top: 50%; width: 6px; height: 6px;
+    border-radius: 50%; background: #2c2c32; transform: translateY(-50%); transition: all .2s; }
+.hist:hover { background: rgba(255,153,51,.06) !important; }
+.hist:hover::before { background: var(--saffron); box-shadow: 0 0 10px var(--saffron); }
+div[data-testid="stRadio"] div[role="radiogroup"] { gap: .4rem; }
+div[data-testid="stRadio"] label { background: #101013 !important; border: 1px solid #222228 !important;
+    border-radius: 10px !important; padding: .45rem .6rem !important; transition: all .2s !important; }
+div[data-testid="stRadio"] label:hover { border-color: rgba(255,153,51,.5) !important; }
+.stButton > button:active { transform: scale(.96) !important; }
+:focus-visible { outline: 2px solid rgba(255,153,51,.7) !important; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; }
+}
+@media (max-width: 640px) {
+    .stat-grid { gap: .4rem; }
+    .sys-chip.hide-m { display: none; }
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ---------------- Sidebar ----------------
 with st.sidebar:
@@ -512,12 +593,18 @@ with st.sidebar:
 is_india = st.session_state.jurisdiction == "india"
 pill_cls = "pill-india" if is_india else "pill-intl"
 pill_txt = "🇮🇳 India" if is_india else "🌍 International"
+try:
+    _kb_docs = len([f for f in os.listdir("data/ayush_docs") if not f.startswith(".")])
+except Exception:
+    _kb_docs = 29
 st.markdown(
     '<div class="topbar">'
     '<div class="brand"><div class="brand-mark">🏛️</div>'
     '<div><div class="brand-name">IP-SAKTI <em>Sahayak</em></div>'
     '<div class="brand-tag">Ministry of Ayush • IPR Assistant</div></div></div>'
-    f'<div class="top-right"><span class="pill {pill_cls}">{pill_txt}</span>'
+    f'<div class="top-right"><span class="sys-chip hide-m"><span class="status-dot"></span>LIVE</span>'
+    f'<span class="sys-chip hide-m">⚡ <b>{_kb_docs}</b>&nbsp;sources</span>'
+    f'<span class="pill {pill_cls}">{pill_txt}</span>'
     '<span class="sih-chip">🏆 SIH 2026</span></div>'
     "</div>",
     unsafe_allow_html=True,
@@ -553,11 +640,16 @@ with st.expander("📁 Upload Document for Analysis (PDF / Image / Text)", expan
 
 # ---------------- Hero (empty state) ----------------
 if not st.session_state.messages:
-    st.markdown("""
+    st.markdown(f"""
     <div class="hero">
         <div class="hero-eyebrow"><span class="dot"></span> RAG + Groq • Live Knowledge Base</div>
-        <h1>Ask anything about <span class="grad">Intellectual Property</span></h1>
-        <p>Indian Patents Act, Biodiversity Act, Traditional Knowledge, WIPO, Nagoya Protocol &amp; TRIPS — answered with cited sources.</p>
+        <h1>Justice, <span class="grad">decoded.</span></h1>
+        <p>Patents, biodiversity &amp; traditional knowledge — answered in seconds with cited sources.</p>
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-num">{_kb_docs}</div><div class="stat-cap">Legal Sources</div></div>
+            <div class="stat-card"><div class="stat-num">1.7K+</div><div class="stat-cap">Knowledge Chunks</div></div>
+            <div class="stat-card"><div class="stat-num">2</div><div class="stat-cap">Jurisdictions</div></div>
+        </div>
     </div>
     <div class="sugg-label">Try asking</div>
     """, unsafe_allow_html=True)
@@ -585,7 +677,7 @@ if not st.session_state.messages:
 
 def render_sources(sources):
     st.markdown('<div class="sources"><div class="sources-label">📚 Sources</div>', unsafe_allow_html=True)
-    for src in sources:
+    for rank, src in enumerate(sources):
         page = src.get("page", "N/A")
         jkey = src.get("jurisdiction", "")
         jval = jkey.upper()
@@ -594,11 +686,13 @@ def render_sources(sources):
         source_name = src.get("source", "Unknown")
         badge = f'<span class="tag tag-{jkey}">{jval}</span>' if jval else ""
         sec = f"<span>§ {escape(section)}</span>" if section else ""
+        rel_w = max(58, 97 - rank * 9)
         st.markdown(
             '<div class="source-item">'
             f'<div class="source-file">📄 {escape(source_name)}</div>'
             f'<div class="source-meta"><span>Page {escape(str(page))}</span>{badge}{sec}</div>'
             f'<div class="source-preview">"{escape(preview)}..."</div>'
+            f'<div class="rel"><span style="width:{rel_w}%"></span></div>'
             "</div>",
             unsafe_allow_html=True,
         )
@@ -701,9 +795,12 @@ for idx, msg in enumerate(st.session_state.messages):
             unsafe_allow_html=True,
         )
     else:
+        mtime = escape(msg.get("time", ""))
+        time_html = f"<span>🕐 {mtime}</span>" if mtime else ""
         st.markdown(
             '<div class="msg msg-bot"><div class="avatar avatar-bot">🏛️</div>'
-            f'<div class="bubble">{msg["content"]}</div></div>',
+            f'<div class="bubble"><div class="ai-head">SAHAYAK AI<span class="live"><i></i>LIVE</span></div>{msg["content"]}'
+            f'<div class="msg-meta"><span class="model">qwen · groq</span>{time_html}</div></div></div>',
             unsafe_allow_html=True,
         )
         b1, b2, _ = st.columns([1.2, 1.2, 5])
@@ -822,7 +919,17 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
         result = query_rag(last_msg + file_context, st.session_state.jurisdiction)
         if result.get("cached"):
             st.caption("⚡ Instant answer — served from cache, zero API cost")
-        st.write(result["answer"])
+
+        def _stream_words(text):
+            import time as _t
+            for _w in text.split(" "):
+                yield _w + " "
+                _t.sleep(0.012)
+
+        try:
+            st.write_stream(_stream_words(result["answer"]))
+        except Exception:
+            st.write(result["answer"])
         if PDF_AVAILABLE and st.button("📄 Save as PDF", key="pdf_new", use_container_width=True):
             pdf_bytes = generate_patent_report(
                 query=last_msg, answer=result["answer"],
@@ -841,6 +948,7 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
         "content": result["answer"],
         "sources": result["sources"],
         "cached": result.get("cached", False),
+        "time": datetime.now().strftime("%H:%M"),
     })
     st.rerun()
 
