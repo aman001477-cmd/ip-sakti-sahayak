@@ -33,18 +33,42 @@ def transcribe_audio(data: bytes) -> str:
     return (resp.json().get("text") or "").strip()
 
 
+INDIAN_VOICE_EN = "en-IN-NeerjaNeural"  # clearest Indian-English neural voice
+INDIAN_VOICE_HI = "hi-IN-SwaraNeural"  # clearest Hindi neural voice
+
+
 def speak_answer(text: str) -> bytes:
-    """Text-to-speech on the server (gTTS) — returns MP3 bytes for st.audio."""
+    """Indian-accent neural TTS (Edge) with gTTS-India fallback — returns MP3 bytes."""
     import re
 
-    from gtts import gTTS
-
     clean = re.sub(r"[*_#`>\[\]()|]", "", text).strip()[:800]
-    lang = "hi" if re.search(r"[\u0900-\u097F]", clean) else "en"
-    buf = io.BytesIO()
-    gTTS(text=clean, lang=lang, slow=False).write_to_fp(buf)
-    buf.seek(0)
-    return buf.read()
+    if not clean:
+        raise ValueError("Nothing to speak")
+    use_hindi = bool(re.search(r"[\u0900-\u097F]", clean))
+    voice = INDIAN_VOICE_HI if use_hindi else INDIAN_VOICE_EN
+    try:
+        import asyncio
+
+        import edge_tts
+
+        async def _gen():
+            chunks = []
+            async for ch in edge_tts.Communicate(clean, voice).stream():
+                if ch["type"] == "audio":
+                    chunks.append(ch["data"])
+            return b"".join(chunks)
+
+        data = asyncio.run(_gen())
+        if not data:
+            raise RuntimeError("empty neural audio")
+        return data
+    except Exception:
+        from gtts import gTTS
+
+        buf = io.BytesIO()
+        gTTS(text=clean, lang="hi" if use_hindi else "en", tld="co.in", slow=False).write_to_fp(buf)
+        buf.seek(0)
+        return buf.read()
 
 st.set_page_config(
     page_title="IP-SAKTI Sahayak",
