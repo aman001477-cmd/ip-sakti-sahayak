@@ -4,12 +4,33 @@ import io
 from html import escape
 from datetime import datetime
 from rag_pipeline import query_rag
-from utils import validate_pdf_folder
+from utils import validate_pdf_folder, get_groq_api_key
 from features import (
     generate_patent_report, process_uploaded_file,
-    get_voice_html, get_voice_controls_html, get_available_features,
+    get_voice_html, get_available_features,
     PDF_AVAILABLE,
 )
+
+try:
+    from streamlit_mic_recorder import mic_recorder
+    MIC_OK = True
+except Exception:
+    MIC_OK = False
+    mic_recorder = None
+
+
+def transcribe_audio(data: bytes) -> str:
+    """Speech-to-text via Groq Whisper using the existing GROQ_API_KEY."""
+    import requests
+    resp = requests.post(
+        "https://api.groq.com/openai/v1/audio/transcriptions",
+        headers={"Authorization": "Bearer " + get_groq_api_key()},
+        files={"file": ("audio.webm", data, "audio/webm")},
+        data={"model": "whisper-large-v3"},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    return (resp.json().get("text") or "").strip()
 
 st.set_page_config(
     page_title="IP-SAKTI Sahayak",
@@ -221,28 +242,35 @@ st.markdown("""
 .dots span:nth-child(2) { animation-delay: .15s; } .dots span:nth-child(3) { animation-delay: .3s; }
 @keyframes pulse { 50% { transform: scale(1.4); opacity: .5; } }
 
-/* ---------- toolbar + input ---------- */
-.toolbar { position: fixed; bottom: 7.2rem; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 860px; z-index: 998;
-    display: flex; justify-content: center; gap: .5rem; padding: 0 1rem; }
-.tool { display: inline-flex; align-items: center; gap: .4rem;
-    background: rgba(20,20,24,.9); border: 1px solid var(--line); color: #cfcfd6;
-    border-radius: 100px; padding: .42rem .9rem; font-size: .75rem; font-weight: 600;
-    backdrop-filter: blur(12px); transition: all .2s ease; cursor: pointer; }
-.tool:hover { border-color: var(--saffron); color: #fff; transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(255,122,0,.25); }
-.tool.on { background: linear-gradient(135deg, #FF9933, #138808); color: #fff; border: none; }
-
-.stChatInput { position: fixed !important; bottom: 2.6rem !important; left: 50% !important;
-    transform: translateX(-50%) !important; width: 100% !important; max-width: 860px !important;
-    z-index: 999 !important; padding: 0 1rem !important; }
-.stChatInput > div { border-radius: 24px !important; background: rgba(18,18,22,.92) !important;
-    border: 1px solid rgba(255,255,255,.1) !important;
+/* ---------- unified chat bar (single bordered box, fixed) ---------- */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    position: fixed !important; bottom: 2.6rem !important; left: 50% !important;
+    transform: translateX(-50%) !important; width: min(860px, calc(100% - 2rem)) !important;
+    z-index: 999 !important; background: rgba(18,18,22,.95) !important;
+    border: 1px solid rgba(255,255,255,.1) !important; border-radius: 26px !important;
     box-shadow: 0 12px 40px rgba(0,0,0,.55) !important;
-    backdrop-filter: blur(16px) !important; transition: all .25s ease !important; }
-.stChatInput > div:focus-within { border-color: rgba(255,153,51,.7) !important;
+    backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important;
+    padding: .45rem .55rem !important; }
+div[data-testid="stVerticalBlockBorderWrapper"]:focus-within {
+    border-color: rgba(255,153,51,.7) !important;
     box-shadow: 0 0 0 3px rgba(255,153,51,.14), 0 12px 40px rgba(0,0,0,.55) !important; }
-.stChatInput textarea { color: #f2f2f3 !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] input {
+    border: none !important; background: transparent !important; box-shadow: none !important;
+    color: #f2f2f3 !important; font-size: .92rem !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] .stTextInput > div { border: none !important; background: transparent !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] .stTextInput > div:focus-within { border: none !important; box-shadow: none !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] button[kind="secondary"] {
+    border: none !important; background: transparent !important; font-size: 1.2rem !important;
+    box-shadow: none !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] button[kind="secondary"]:hover {
+    background: rgba(255,255,255,.08) !important; transform: none !important; box-shadow: none !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] button[data-testid="stBaseButton-secondaryFormSubmit"] {
+    background: linear-gradient(135deg, #FF9933, #138808) !important; color: #fff !important;
+    border-radius: 50% !important; width: 42px !important; height: 42px !important;
+    min-width: 42px !important; font-size: 1rem !important; padding: 0 !important;
+    box-shadow: 0 6px 16px rgba(255,122,0,.4) !important; }
+
+/* chat input now lives inside the bordered chat bar above */
 
 /* ---------- footer ---------- */
 .footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
@@ -411,13 +439,8 @@ with st.sidebar:
     st.session_state.jurisdiction = juris
     st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<div class='side-sec'><span class='side-lbl'>🎤 Voice Assistant</span>", unsafe_allow_html=True)
-    voice_label = "🔴 Voice Mode ON" if st.session_state.voice_mode else "🎤 Enable Voice Mode"
-    if st.button(voice_label, use_container_width=True, key="toggle_voice"):
-        st.session_state.voice_mode = not st.session_state.voice_mode
-        st.rerun()
-    if st.session_state.voice_mode:
-        st.caption("🎤 mic = speak question • 🔊 = hear answer")
+    st.markdown("<div class='side-sec'><span class='side-lbl'>🎤 Voice</span>", unsafe_allow_html=True)
+    st.caption("🎤 mic in the chat bar = speak • 🔊 on answers = listen")
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='side-sec'><span class='side-lbl'>Knowledge Base</span>", unsafe_allow_html=True)
@@ -478,9 +501,6 @@ st.markdown(
     "</div>",
     unsafe_allow_html=True,
 )
-
-if st.session_state.voice_mode:
-    st.components.v1.html(get_voice_controls_html(), height=64)
 
 # ---------------- Document upload ----------------
 with st.expander("📁 Upload Document for Analysis (PDF / Image / Text)", expanded=st.session_state.show_uploader):
@@ -592,31 +612,61 @@ for idx, msg in enumerate(st.session_state.messages):
                     mime="application/pdf", key=f"dl_{idx}",
                 )
         with b2:
-            if st.session_state.voice_mode and st.button("🔊 Speak", key=f"speak_{idx}", use_container_width=True):
+            if st.button("🔊 Speak", key=f"speak_{idx}", use_container_width=True):
                 safe = msg["content"][:500].replace("`", "'").replace('"', "'")
                 st.components.v1.html(f"<script>speakText(`{safe}`);</script>", height=0)
         if msg.get("sources"):
             render_sources(msg["sources"])
 
-# ---------------- Toolbar + input ----------------
-t1, t2, t3 = st.columns([1, 1, 1])
-with t1:
-    if st.button("📎 Attach file", use_container_width=True, key="tb_attach"):
-        st.session_state.show_uploader = not st.session_state.show_uploader
-        st.rerun()
-with t2:
-    vlabel = "🔴 Voice ON" if st.session_state.voice_mode else "🎤 Voice"
-    if st.button(vlabel, use_container_width=True, key="tb_voice"):
-        st.session_state.voice_mode = not st.session_state.voice_mode
-        st.rerun()
-with t3:
-    if st.button("✨ New chat", use_container_width=True, key="tb_new"):
-        st.session_state.messages = []
-        st.rerun()
+# ---------------- Unified chat bar: attach + input + mic + send in ONE box ----------------
+with st.container(border=True):
+    cb1, cb2, cb3 = st.columns([1, 10, 1], gap="small")
+    with cb1:
+        if st.button("📎", use_container_width=True, key="cb_attach", help="Attach PDF / image / text"):
+            st.session_state.show_uploader = not st.session_state.show_uploader
+            st.rerun()
+    with cb2:
+        with st.form("chatbar", clear_on_submit=True, border=False):
+            fi, fs = st.columns([10, 1], gap="small")
+            with fi:
+                typed = st.text_input(
+                    "Message",
+                    placeholder="Ask about Patents Act, Biodiversity, WIPO, TKDL…",
+                    label_visibility="collapsed",
+                    key="chat_text",
+                )
+            with fs:
+                sent = st.form_submit_button("➤", use_container_width=True, help="Send")
+    with cb3:
+        if MIC_OK:
+            audio = mic_recorder(
+                start_prompt="🎤", stop_prompt="⏹",
+                just_once=True, use_container_width=True,
+                key="chat_mic", format="webm",
+            )
+        else:
+            audio = None
+            if st.button("🎤", use_container_width=True, key="cb_mic_na", help="Voice recorder unavailable"):
+                st.toast("Voice recorder not installed on server")
 
-if prompt := st.chat_input("Ask about Patents Act, Biodiversity Act, WIPO, Nagoya Protocol, TKDL..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if sent and typed and typed.strip():
+    st.session_state.messages.append({"role": "user", "content": typed.strip()})
     st.rerun()
+
+if audio and isinstance(audio, dict) and audio.get("bytes"):
+    import hashlib
+    h = hashlib.md5(audio["bytes"]).hexdigest()
+    if st.session_state.get("last_audio_hash") != h:
+        st.session_state["last_audio_hash"] = h
+        with st.spinner("🎤 Transcribing your voice…"):
+            try:
+                said = transcribe_audio(audio["bytes"])
+            except Exception as e:
+                st.error(f"Voice transcribe failed: {e}")
+                said = ""
+        if said:
+            st.session_state.messages.append({"role": "user", "content": said})
+            st.rerun()
 
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_msg = st.session_state.messages[-1]["content"]

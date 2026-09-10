@@ -13,3 +13,4 @@ pytesseract
 pillow
 pymupdf
 requests
+streamlit-mic-recorder
