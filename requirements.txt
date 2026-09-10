@@ -1,0 +1,15 @@
+streamlit
+langchain
+langchain-community
+langchain-groq
+chromadb
+sentence-transformers
+pypdf
+python-dotenv
+tiktoken
+tenacity
+fpdf2
+pytesseract
+pillow
+pymupdf
+requests

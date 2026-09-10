@@ -1,0 +1,59 @@
+TKDL (Traditional Knowledge Digital Library) Guidelines
+
+OVERVIEW
+The Traditional Knowledge Digital Library (TKDL) is a pioneering Indian initiative to prevent misappropriation of traditional knowledge at international patent offices.
+
+OBJECTIVES
+1. Prevent grant of patents on non-original inventions based on Indian traditional knowledge
+2. Create a digital repository of traditional knowledge from Ayurveda, Unani, Siddha, Yoga
+3. Provide access to patent examiners worldwide for prior art search
+4. Bridge language barrier (Sanskrit, Arabic, Persian, Urdu, Tamil to English, French, German, Japanese, Spanish)
+
+DATABASE CONTENT
+- Ayurveda: ~100,000 formulations from classical texts
+- Unani: ~80,000 formulations
+- Siddha: ~12,000 formulations
+- Yoga: ~1,500 postures/techniques
+
+ACCESS FOR PATENT OFFICES
+- EPO (European Patent Office): Access granted since 2009
+- USPTO (US Patent Office): Access granted since 2011
+- IP Australia: Access granted since 2013
+- CIPO (Canada): Access granted since 2014
+- UK IPO: Access granted since 2015
+- JPO (Japan): Access granted since 2016
+- DPMA (Germany): Access granted since 2017
+- INPI (France): Access granted since 2018
+- CIPO (Chile): Access granted since 2019
+- IP Philippines: Access granted since 2020
+- IP Russia: Access granted since 2021
+- IP Brazil: Access granted since 2022
+
+SEARCH INTERFACE
+- TKDL provides a dedicated search portal for patent examiners
+- Supports keyword, formulation, disease, ingredient searches
+- Cross-referenced with IPC (International Patent Classification)
+- Available in multiple languages
+
+LEGAL FRAMEWORK
+- TKDL operates under Cabinet Committee on Economic Affairs approval
+- MoU with CSIR (Council of Scientific and Industrial Research)
+- Access agreements with individual patent offices
+- Non-disclosure agreements protect sensitive formulations
+
+SUCCESS STORIES
+- 200+ patent applications rejected/withdrawn based on TKDL prior art
+- Major cases: Neem, Turmeric, Basmati, Karela, Jamun, Brinjal
+- Estimated savings: $1B+ in potential litigation costs
+
+RELEVANT INDIAN LAWS
+- Patents Act 1970, Section 3(p): Traditional knowledge not patentable
+- Biodiversity Act 2002: Access and benefit sharing for TK
+- Protection of Plant Varieties and Farmers' Rights Act 2001
+- Geographical Indications Act 1999
+
+INTERNATIONAL COOPERATION
+- WIPO IGC (Intergovernmental Committee on IP and Genetic Resources, TK, Folklore)
+- CBD (Convention on Biological Diversity) - Nagoya Protocol
+- WTO TRIPS Council - Article 27.3(b) review
+- FAO International Treaty on Plant Genetic Resources

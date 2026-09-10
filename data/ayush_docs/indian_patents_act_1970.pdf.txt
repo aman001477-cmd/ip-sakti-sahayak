@@ -1,0 +1,705 @@
+INDIAN PATENTS ACT, 1970 - COMPREHENSIVE GUIDE
+Ministry of Commerce & Industry, Government of India
+
+CHAPTER I: PRELIMINARY
+
+Section 1: Short title, extent and commencement
+(1) This Act may be called the Patents Act, 1970.
+(2) It extends to the whole of India.
+(3) It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint.
+
+Section 2: Definitions
+In this Act, unless the context otherwise requires:
+(a) "ApiController" means the Controller-General of Patents, Designs and Trade Marks appointed under section 73;
+(b) "Bench" means a bench of the Appellate Board;
+(c) "Controller" means the Controller-General of Patents, Designs and Trade Marks referred to in section 73;
+(d) "High Court" means the High Court having jurisdiction;
+(e) "Indian patent" means a patent granted under this Act;
+(f) "Invention" means a new product or process involving an inventive step and capable of industrial application;
+(g) "Journal" means the Official Journal of the Patent Office;
+(h) "Patent" means a patent for an invention granted under this Act;
+(i) "Patent office" means the patent office referred to in section 74;
+(j) "Person interested" includes a person engaged in, or in promoting, research in the same field as that to which the invention relates;
+(k) "Prescribed" means prescribed by rules made under this Act;
+(l) "Priority date" means the date of filing of the application in respect of a patent;
+(m) "Specification" means the specification referred to in section 10;
+(n) "State" includes a Union territory.
+
+CHAPTER II: INVENTIONS NOT Patentable
+
+Section 3: What are not inventions
+The following are not inventions within the meaning of this Act:
+(a) an invention which is frivolous or which claims anything obviously contrary to well established natural laws;
+(b) an invention the primary or intended use or commercial exploitation of which could be contrary to public order or morality or which causes serious and serious damage to human, animal or plant life or health or to the environment;
+(c) the discovery of any living thing or non-living substance occurring in nature;
+(d) the discovery of a scientific principle or the abstract theory or discovery of any scientific principle or mathematical method;
+(e) a mathematical or business method or a computer programme per se or algorithms;
+(f) a literary, dramatic, musical or artistic work or any other aesthetic creation whatsoever including cinematographic works and television productions;
+(g) a mere scheme or rule or method of performing mental act or method of playing game;
+(h) a presentation of information;
+(i) topography of integrated circuits;
+(j) an invention which in effect, is traditional knowledge or which is an aggregation or duplication of known properties of traditionally known components or components;
+(k) plants and animals other than micro-organisms but including seeds, varieties and species and essentially biological processes for production or propagation of plants and animals;
+(l) a mathematical or business method or a computer programme per se or algorithms;
+(m) a method of treatment of the human or animal body by surgery or therapy and diagnostic methods practiced on the human or animal body shall not be inventions;
+
+Section 3(p): Traditional knowledge
+An invention which in effect, is traditional knowledge or which is an aggregation or duplication of known properties of traditionally known components or components shall not be patentable.
+
+Section 3(e): Computer programmes
+A computer programme per se is not patentable unless it is embedded in hardware.
+
+Section 3(i): Method of treatment
+A method of treatment of the human or animal body by surgery or therapy and diagnostic methods practiced on the human or animal body shall not be an invention.
+
+Section 3(d): New form not invention
+The mere discovery of a new form of a known substance which does not result in the enhancement of the known efficacy of that substance or the mere discovery of any new property or new use for a known substance or of the mere use of a known process, machine or apparatus unless such known process results in a new product or employs at least one new reactant shall not be patentable.
+
+Section 3(d) Explanation:
+For the purposes of this clause, salts, esters, ethers, polymorphs, metabolites, pure form, particle size, isomers, mixtures of isomers, complexes, combinations and other derivatives of known substance shall be deemed to be the same substance, unless they differ significantly in properties with regard to efficacy.
+
+Section 4: Inventions relating to atomic energy not patentable
+No patent shall be granted for inventions relating to atomic energy.
+
+CHAPTER III: PATENTABILITY
+
+Section 5: Inventions patentable
+(1) An invention relating to a product or a process that is new, involves an inventive step and is capable of industrial application may be patented.
+(2) Invention means a new product or process involving an inventive step and capable of industrial application.
+(3) Invention involves an inventive step means that the invention involves a technical advance as compared to the existing knowledge or having economic significance or both, and that makes the invention not obvious to a person skilled in the art.
+
+Section 6: Persons entitled to apply for patents
+(1) An application for a patent may be made by any person claiming to be the true and first inventor of the invention or by any person claiming to be the assignee of the person claiming to be the true and first inventor.
+(2) An application may be made by any person being the true and first inventor or his assignee.
+
+Section 7: Form of application
+(1) Every application for a patent shall be in the prescribed form and shall be filed at the patent office.
+(2) Every application shall contain:
+(a) a request for the grant of a patent;
+(b) a specification of the invention;
+(c) drawings, if any;
+(d) an abstract of the invention;
+(e) a declaration as to the inventorship;
+(f) a statement and undertaking under section 8;
+(g) documents showing the priority date and country of origin, if any;
+(h) prescribed fee.
+
+Section 8: Information and undertaking regarding foreign applications
+(1) The applicant shall, when required by the Controller, furnish information as to the title, status and proceedings relating to any application for a patent filed in any country outside India in respect of the same or substantially the same invention.
+(2) The applicant shall give an undertaking to the Controller that he shall, from time to time as may be required by the Controller, furnish information as to the title, status and proceedings relating to any application for a patent filed in any country outside India.
+
+Section 10: Description and specification
+(1) The specification shall fully and particularly describe the invention and its operation or use and the manner in which it is to be performed.
+(2) The specification shall disclose the best method of performing the invention which is known to the applicant.
+(3) The specification shall end with a claim or claims defining the scope of the invention.
+(4) The claim or claims shall be clear and concise and shall be fairly based on the matter disclosed in the specification.
+(5) The specification shall contain:
+(a) a title;
+(b) a field of invention;
+(c) a background of the invention;
+(d) a summary of the invention;
+(e) a brief description of the drawings;
+(f) a detailed description of the invention;
+(g) claims;
+(h) an abstract.
+
+Section 11: Priority date of invention
+The priority date of an invention shall be the date of filing of the application in respect of the invention.
+
+Section 11A: Publication of applications
+(1) Every application for a patent shall be published after the expiry of eighteen months from the date of filing or priority date, whichever is earlier.
+(2) The applicant may, however, request for early publication by paying the prescribed fee.
+(3) After publication, the application and the specification shall be open to public inspection.
+
+Section 11B: Right of priority
+(1) An application for a patent may be filed claiming priority from an application filed in a convention country.
+(2) The priority period shall be twelve months from the date of filing of the first application in the convention country.
+
+CHAPTER IV: APPLICATION FOR PATENTS
+
+Section 12: Examination of application
+(1) The Controller shall, on receipt of an application for a patent, refer the application to an examiner for examination.
+(2) The examiner shall, within one month from the date of reference, examine the application and report to the Controller.
+
+Section 13: Report of examiner
+(1) The examiner shall, after examination, submit a report to the Controller on:
+(a) whether the application complies with the requirements of this Act;
+(b) whether the invention is patentable;
+(c) whether the specification is sufficient;
+(d) whether the claims are clear and fairly based;
+(e) whether there is any prior art;
+(f) any other matter as may be prescribed.
+
+Section 14: Consideration of report of examiner by Controller
+(1) The Controller shall consider the report of the examiner and may:
+(a) accept the application;
+(b) require amendment of the specification;
+(c) refuse the application;
+(d) require further information or evidence.
+
+Section 15: Power of Controller to refuse or accept application
+The Controller may refuse to grant a patent if he is satisfied that:
+(a) the invention is not patentable;
+(b) the application does not comply with the requirements of this Act;
+(c) the specification is insufficient;
+(d) the claims are unclear or not fairly based;
+(e) the applicant is not entitled to the grant of a patent.
+
+Section 16: Acceptance of application
+(1) When the Controller is satisfied that the application complies with the requirements of this Act, he shall accept the application.
+(2) After acceptance, the application shall be published and open to public inspection.
+
+Section 17: Opposition to grant of patent
+(1) Any person may, within three months from the date of publication of the application, file a notice of opposition to the grant of a patent.
+(2) The opposition may be filed on the following grounds:
+(a) that the applicant is not entitled to the grant of a patent;
+(b) that the invention is not patentable;
+(c) that the specification is insufficient;
+(d) that the claims are unclear or not fairly based;
+(e) that the invention was publicly known or publicly used in India before the priority date;
+(f) that the invention was published in any document before the priority date;
+(g) that the invention is obvious and does not involve an inventive step;
+(h) that the invention is not capable of industrial application;
+(i) that the invention is traditional knowledge;
+(j) that the invention relates to atomic energy;
+(k) any other ground as may be prescribed.
+
+Section 18: Grant of patent
+(1) If there is no opposition or if the opposition is decided in favour of the applicant, the Controller shall grant the patent.
+(2) The patent shall be granted to the applicant or applicants.
+
+CHAPTER V: PATENTS AND EXCLUSIVE RIGHTS
+
+Section 47: Grant of patents
+A patent shall be granted subject to the following conditions:
+(a) the patent shall be granted for a term of 20 years from the date of filing;
+(b) the patent shall be granted only for an invention which is new, involves an inventive step and is capable of industrial application;
+(c) the patent shall be granted to the true and first inventor or his assignee;
+(d) the patent shall be granted subject to the provisions of this Act.
+
+Section 48: Rights of patentee
+(1) Subject to the provisions of this Act, a patent granted under this Act shall confer on the patentee:
+(a) the exclusive right to make, use, sell or distribute the invention in India;
+(b) the right to license or assign the patent;
+(c) the right to take legal action against infringers.
+
+Section 49: Patent not to be granted in certain cases
+No patent shall be granted for:
+(a) inventions relating to atomic energy;
+(b) inventions which are contrary to public order or morality;
+(c) inventions which are traditional knowledge;
+(d) inventions which are not patentable under section 3.
+
+Section 50: Term of patent
+(1) The term of a patent shall be 20 years from the date of filing of the application.
+(2) The term may be extended in certain cases as prescribed.
+
+Section 51: Renewal of patent
+(1) The patent shall be renewed every year by paying the prescribed renewal fee.
+(2) The renewal fee shall be paid before the expiry of the term.
+(3) If the renewal fee is not paid, the patent shall lapse.
+
+Section 52: Restoration of lapsed patents
+(1) If a patent lapses due to non-payment of renewal fee, the patentee may apply for restoration within 18 months from the date of lapsing.
+(2) The Controller may restore the patent if he is satisfied that the lapsing was unintentional.
+
+Section 53: Surrender of patent
+(1) A patentee may surrender his patent by giving notice to the Controller.
+(2) The Controller shall publish the notice and any person may within three months file an objection.
+(3) If no objection is filed or if the objection is decided in favour of the patentee, the Controller shall accept the surrender.
+
+Section 54: Revocation of patent
+(1) The Controller may revoke a patent on the following grounds:
+(a) that the patent was granted to a person who was not entitled to it;
+(b) that the invention is not patentable;
+(c) that the patent was obtained by fraud;
+(d) that the specification is insufficient;
+(e) that the claims are unclear;
+(f) that the invention was publicly known before the priority date;
+(g) that the invention is obvious;
+(h) any other ground as may be prescribed.
+
+Section 55: Revocation on petition of Central Government
+(1) The Central Government may, in the public interest, revoke a patent by filing a petition before the Controller.
+(2) The Controller shall consider the petition and may revoke the patent if he is satisfied that it is in the public interest.
+
+Section 56: Revocation for non-working
+(1) The Controller may revoke a patent if the patented invention is not worked in India within four years from the date of grant.
+(2) Working means manufacturing in India or importing into India.
+
+Section 57: Compulsory licences
+(1) Any person interested may apply to the Controller for a compulsory licence on the following grounds:
+(a) that the reasonable requirements of the public are not satisfied;
+(b) that the patented invention is not available to the public at a reasonable price;
+(c) that the patented invention is not worked in India.
+(2) The Controller may grant a compulsory licence if he is satisfied that the grounds are established.
+(3) The licence shall be granted on fair terms and shall be non-exclusive.
+
+Section 58: Use of patented invention for Government purposes
+(1) The Government may use any patented invention for Government purposes without the consent of the patentee.
+(2) The patentee shall be entitled to compensation for such use.
+
+Section 59: Right of third parties to use patented invention
+(1) Any person who, immediately before the priority date, was bona fide using the invention may continue to use the invention.
+(2) The right of third parties shall not be affected by the grant of the patent.
+
+CHAPTER VI: PATENT OFFICE AND REGISTER
+
+Section 73: Controller-General of Patents, Designs and Trade Marks
+(1) The Central Government shall appoint a Controller-General of Patents, Designs and Trade Marks.
+(2) The Controller shall be the head of the Patent Office and shall be responsible for the administration of this Act.
+
+Section 74: Patent Office
+(1) There shall be a Patent Office for the purposes of this Act.
+(2) The Patent Office shall be under the superintendence of the Controller.
+(3) The Patent Office shall have such officers and staff as may be prescribed.
+
+Section 75: Register of Patents
+(1) The Controller shall maintain a register of patents.
+(2) The register shall contain:
+(a) the name and address of the patentee;
+(b) the title of the invention;
+(c) the date of filing and grant;
+(d) the term of the patent;
+(e) any assignments or licences;
+(f) any other particulars as may be prescribed.
+
+Section 76: Entries in register
+(1) The Controller shall make entries in the register:
+(a) on the grant of a patent;
+(b) on the assignment or licence of a patent;
+(c) on the renewal of a patent;
+(d) on the surrender or revocation of a patent;
+(e) on any other change as may be prescribed.
+
+Section 77: Inspection of register
+(1) The register shall be open to public inspection.
+(2) Any person may, on payment of the prescribed fee, obtain a copy of any entry in the register.
+
+Section 78: Correction of register
+(1) The Controller may, on his own motion or on application, correct any error in the register.
+(2) The Controller may make any amendment in the register to bring it in conformity with the facts.
+
+CHAPTER VII: PATENT AGENTS
+
+Section 125: Patent agents
+(1) Any person who has passed the qualifying examination for patent agents may be registered as a patent agent.
+(2) The register of patent agents shall be maintained by the Controller.
+
+Section 126: Qualifications for registration as patent agent
+A person shall be qualified for registration as a patent agent if he:
+(a) is a citizen of India;
+(b) has attained the age of 21 years;
+(c) has a degree in science, engineering or technology;
+(d) has passed the qualifying examination;
+(e) has completed training as prescribed.
+
+Section 127: Rights of patent agents
+A registered patent agent shall be entitled to:
+(a) prepare and file patent applications;
+(b) act as agent for patent matters;
+(c) represent clients before the Controller.
+
+Section 128: Duties of patent agents
+A patent agent shall:
+(a) act honestly and in good faith;
+(b) maintain confidentiality;
+(c) avoid conflicts of interest;
+(d) comply with the code of conduct.
+
+Section 129: Entry in register of patent agents
+The Controller shall make entries in the register of patent agents:
+(a) on the registration of a patent agent;
+(b) on the suspension or revocation of registration;
+(c) on any other change as may be prescribed.
+
+Section 130: Removal from register
+(1) The Controller may remove a patent agent from the register if he:
+(a) is convicted of an offence;
+(b) is declared insolvent;
+(c) has been guilty of professional misconduct;
+(d) has become mentally incapacitated.
+
+Section 131: Powers of Controller in relation to patent agents
+The Controller may:
+(a) conduct proceedings for disciplinary action against patent agents;
+(b) suspend or revoke registration;
+(c) impose fines or penalties;
+(d) make any order as may be prescribed.
+
+Section 132: Practice of patent agents not to be affected
+Nothing in this Chapter shall affect the right of any person to prepare and file patent applications.
+
+CHAPTER VIII: RIGHTS OF THIRD PARTIES
+
+Section 140: Provisions as to revival of lapsed patents
+(1) If a patent lapses due to non-payment of renewal fee, the patentee may apply for restoration.
+(2) The Controller may restore the patent if he is satisfied that the lapsing was unintentional.
+
+Section 141: Provisions as to applications for restoration of lapsed patents
+(1) The application for restoration shall be filed within 18 months from the date of lapsing.
+(2) The application shall contain:
+(a) a statement of the circumstances leading to the lapsing;
+(b) evidence that the lapsing was unintentional;
+(c) the prescribed fee.
+
+Section 142: Procedure for dealing with applications for restoration
+(1) The Controller shall consider the application and may:
+(a) grant the application;
+(b) refuse the application;
+(c) require further information or evidence.
+
+Section 143: Provision for cases where application for restoration is refused
+(1) If the application for restoration is refused, the patent shall remain lapsed.
+(2) The patentee may appeal to the Appellate Board.
+
+Section 144: Provisions as to assignment of patents
+(1) A patent may be assigned by the patentee.
+(2) The assignment shall be in writing and shall be registered with the Controller.
+(3) The assignment shall take effect from the date of registration.
+
+Section 145: Provisions as to licences under patents
+(1) A patentee may grant a licence under the patent.
+(2) The licence shall be in writing and shall be registered with the Controller.
+(3) The licence shall take effect from the date of registration.
+
+Section 146: Register of patents to be open for inspection
+(1) The register shall be open to public inspection.
+(2) Any person may, on payment of the prescribed fee, obtain a copy of any entry in the register.
+
+Section 147: Certified copies of entries
+(1) The Controller shall, on payment of the prescribed fee, provide certified copies of entries in the register.
+(2) The certified copies shall be prima facie evidence of the contents of the register.
+
+Section 148: Evidence of entries in register
+Entries in the register shall be prima facie evidence of the facts stated therein.
+
+Section 149: Rectification of register
+(1) The Controller may, on application, rectify the register.
+(2) The application shall be filed within three months from the date of the entry.
+(3) The Controller may:
+(a) rectify the register;
+(b) refuse the application;
+(c) require further information or evidence.
+
+Section 150: Procedure for rectification of register
+The procedure for rectification of register shall be as prescribed.
+
+Section 151: Powers of Controller to rectify register
+The Controller may:
+(a) correct any error in the register;
+(b) make any amendment in the register;
+(c) delete any entry in the register;
+(d) make any order as may be prescribed.
+
+Section 152: Appeal against orders of Controller
+(1) Any person aggrieved by an order of the Controller may appeal to the Appellate Board.
+(2) The appeal shall be filed within three months from the date of the order.
+(3) The Appellate Board may:
+(a) confirm the order;
+(b) modify the order;
+(c) set aside the order;
+(d) make any other order as may be prescribed.
+
+Section 153: Procedure on appeal
+(1) The Appellate Board shall hear the appeal.
+(2) The Appellate Board may:
+(a) call for evidence;
+(b) inspect documents;
+(c) examine witnesses;
+(d) make any order as may be prescribed.
+
+Section 154: Power of Appellate Board
+The Appellate Board may:
+(a) confirm, modify or set aside any order of the Controller;
+(b) remit the case to the Controller for fresh consideration;
+(c) make any other order as may be prescribed.
+
+Section 155: Finality of orders of Appellate Board
+Orders of the Appellate Board shall be final and binding on all parties.
+
+Section 156: Costs of proceedings
+(1) The Controller or the Appellate Board may award costs in any proceedings.
+(2) The costs shall be as prescribed.
+
+Section 157: Power to make rules
+(1) The Central Government may make rules for carrying out the provisions of this Act.
+(2) The rules may provide for:
+(a) the form of application;
+(b) the procedure for examination;
+(c) the fees;
+(d) the time limits;
+(e) any other matter as may be prescribed.
+
+Section 158: Power to remove difficulties
+(1) The Central Government may, by order, remove any difficulty in the implementation of this Act.
+(2) The order shall not be made after three years from the commencement of this Act.
+
+CHAPTER IX: INFRINGEMENT OF PATENTS
+
+Section 104: suits for infringement of patents
+(1) No suit for infringement of a patent shall be instituted in any court inferior to a district court having jurisdiction.
+(2) The suit shall be filed within three years from the date of infringement.
+(3) The suit shall contain:
+(a) the name and address of the plaintiff;
+(b) the name and address of the defendant;
+(c) the particulars of the infringement;
+(d) the relief claimed.
+
+Section 105: Power of court to grant relief
+(1) The court may grant the following relief:
+(a) injunction;
+(b) damages;
+(c) account of profits;
+(d) delivery up of infringing goods;
+(e) declaration of non-infringement;
+(f) any other relief as may be prescribed.
+
+Section 106: Power of court to grant interim injunction
+(1) The court may grant interim injunction to prevent infringement.
+(2) The injunction may be granted ex parte if the court is satisfied that:
+(a) the plaintiff has a prima facie case;
+(b) the balance of convenience is in favour of the plaintiff;
+(c) irreparable injury would be caused to the plaintiff.
+
+Section 107: Defences in suits for infringement
+The following are valid defences:
+(a) that the patent is invalid;
+(b) that the patent has expired;
+(c) that the defendant has a right to use the invention;
+(d) that the defendant was using the invention before the priority date;
+(e) that the invention was publicly known before the priority date;
+(f) any other defence as may be prescribed.
+
+Section 108: Order for inspection or inquiry
+(1) The court may order inspection or inquiry to determine infringement.
+(2) The order may be made ex parte if the court is satisfied that:
+(a) there is a prima facie case of infringement;
+(b) the inspection or inquiry is necessary to determine infringement.
+
+Section 109: Power of court to make order as to costs
+The court may award costs to the successful party.
+
+Section 110: Power of court to grant damages in lieu of injunction
+(1) The court may grant damages in lieu of injunction.
+(2) The damages may be assessed by the court or by an expert.
+
+Section 111: Power of court to order delivery of infringing goods
+(1) The court may order delivery of infringing goods.
+(2) The order may be made on application by the plaintiff.
+
+Section 112: Power of court to grant declaration of non-infringement
+(1) The court may grant a declaration of non-infringement.
+(2) The declaration may be granted if the court is satisfied that:
+(a) the defendant does not infringe the patent;
+(b) the patent is invalid;
+(c) the patent has expired.
+
+Section 113: Power of court to make order as to publication of judgment
+The court may order publication of the judgment.
+
+Section 114: Power of court to stay proceedings
+(1) The court may stay proceedings if:
+(a) there is a pending appeal;
+(b) there is a pending opposition;
+(c) it is in the interest of justice.
+
+Section 115: Power of court to grant certificate of contested validity
+(1) The court may grant a certificate of contested validity.
+(2) The certificate may be used in subsequent proceedings.
+
+Section 116: Power of court to make order as to costs of application for certificate
+The court may award costs of the application.
+
+Section 117: Power of court to grant relief in case of groundless threats
+(1) The court may grant relief if there are groundless threats of infringement proceedings.
+(2) The relief may include:
+(a) declaration that the threats are unjustifiable;
+(b) injunction against the threats;
+(c) damages.
+
+Section 118: Offences
+The following are offences:
+(a) fraudulent obtaining of a patent;
+(b) fraudulent marking of goods;
+(c) false entries in register;
+(d) refusal to furnish information;
+(e) any other offence as may be prescribed.
+
+Section 119: Penalties
+The penalties for offences are:
+(a) fraudulent obtaining of a patent: imprisonment up to 5 years or fine up to Rs. 10 lakhs;
+(b) fraudulent marking: imprisonment up to 3 years or fine up to Rs. 5 lakhs;
+(c) false entries: imprisonment up to 2 years or fine up to Rs. 2 lakhs;
+(d) refusal to furnish information: imprisonment up to 1 year or fine up to Rs. 1 lakh.
+
+Section 120: Offences by companies
+(1) If an offence is committed by a company, every person who was in charge of and responsible for the conduct of the business shall be deemed guilty.
+(2) If an offence is committed with the consent of a director or manager, he shall be deemed guilty.
+
+Section 121: Cognizance of offences
+(1) No court shall take cognizance of an offence except on a complaint made by the Controller.
+(2) The complaint shall be filed within one year from the date of the offence.
+
+Section 122: Powers of police
+(1) The police may arrest without warrant any person who has committed an offence.
+(2) The police may search and seize infringing goods.
+
+Section 123: Composition of offences
+(1) The Controller may compound any offence.
+(2) The composition fee shall be as prescribed.
+
+Section 124: Protection of action taken in good faith
+No suit or prosecution shall lie against any person for anything done in good faith under this Act.
+
+CHAPTER X: INTERNATIONAL ARRANGEMENTS
+
+Section 133: Convention countries
+(1) The Central Government may declare any country to be a convention country.
+(2) A person who has filed an application in a convention country may claim priority in India.
+
+Section 134: Right of priority
+(1) An application for a patent may be filed claiming priority from an application filed in a convention country.
+(2) The priority period shall be twelve months from the date of filing of the first application.
+
+Section 135: Applications for patents under convention arrangements
+(1) The application shall be filed within twelve months from the date of filing of the first application in the convention country.
+(2) The application shall contain:
+(a) a request for the grant of a patent;
+(b) a specification of the invention;
+(c) documents showing the priority date and country of origin;
+(d) the prescribed fee.
+
+Section 136: Mutual protection of patent rights
+(1) India shall grant protection to patents granted in convention countries.
+(2) The protection shall be subject to the provisions of this Act.
+
+Section 137: International applications under Patent Cooperation Treaty
+(1) India is a party to the Patent Cooperation Treaty.
+(2) An international application may be filed designating India.
+(3) The international application shall be treated as an application under this Act.
+
+Section 138: Chapter to override other provisions
+This chapter shall override any other provisions of this Act inconsistent with it.
+
+CHAPTER XI: MISCELLANEOUS
+
+Section 159: Power of Central Government to make rules
+(1) The Central Government may make rules for carrying out the provisions of this Act.
+(2) The rules may provide for:
+(a) the forms;
+(b) the fees;
+(c) the procedure;
+(d) the time limits;
+(e) any other matter as may be prescribed.
+
+Section 160: Power of Controller to make regulations
+(1) The Controller may make regulations for the efficient conduct of business.
+(2) The regulations may provide for:
+(a) the procedure;
+(b) the forms;
+(c) the fees;
+(d) any other matter as may be prescribed.
+
+Section 161: Rules and regulations to be laid before Parliament
+(1) The rules and regulations shall be laid before Parliament.
+(2) Parliament may modify or annul the rules or regulations.
+
+Section 162: Bar of jurisdiction of courts
+No court shall have jurisdiction to question the validity of any rule or regulation.
+
+Section 163: Offences and penalties
+(1) The offences and penalties are as specified in sections 118 to 123.
+(2) The court may award costs to the successful party.
+
+Section 164: Transitional provisions
+(1) The provisions of this Act shall apply to applications filed on or after the commencement of this Act.
+(2) The provisions of the Indian Patents and Designs Act, 1911 shall apply to applications filed before the commencement of this Act.
+
+Section 165: Repeal and saving
+(1) The Indian Patents and Designs Act, 1911 is hereby repealed.
+(2) Anything done or any action taken under the repealed Act shall be deemed to have been done or taken under this Act.
+
+APPENDIX A: PATENT APPLICATION PROCESS
+
+Step 1: Pre-Filing Stage
+1. Conduct prior art search
+2. Draft specification
+3. Prepare drawings
+4. File application
+
+Step 2: Filing Stage
+1. File application at Patent Office
+2. Pay prescribed fee
+3. Obtain filing receipt
+4. Get application number
+
+Step 3: Publication Stage
+1. Application published after 18 months
+2. Open to public inspection
+3. Early publication available on request
+
+Step 4: Examination Stage
+1. Request for examination within 48 months
+2. Examiner examines application
+3. First Examination Report (FER) issued
+4. Respond to FER within 6 months
+
+Step 5: Grant Stage
+1. If all requirements met, patent granted
+2. Patent published in Journal
+3. Patent certificate issued
+4. Term: 20 years from filing date
+
+APPENDIX B: PATENT FILING FEES
+
+Individual/Startup:
+- Application Fee: Rs. 1,600
+- Publication Fee: Rs. 2,500
+- Examination Fee: Rs. 4,000
+- Renewal Fee (per year): Rs. 800
+
+Small Entity:
+- Application Fee: Rs. 4,000
+- Publication Fee: Rs. 6,250
+- Examination Fee: Rs. 10,000
+- Renewal Fee (per year): Rs. 2,000
+
+Others:
+- Application Fee: Rs. 8,000
+- Publication Fee: Rs. 12,500
+- Examination Fee: Rs. 20,000
+- Renewal Fee (per year): Rs. 4,000
+
+APPENDIX C: TYPES OF PATENTS
+
+1. Product Patent: Protects new products
+2. Process Patent: Protects new processes
+3. Chemical Patent: Protects chemical inventions
+4. Pharmaceutical Patent: Protects drugs and medicines
+5. Biotechnology Patent: Protects biotech inventions
+6. Software Patent: Protects software (with hardware)
+7. Design Patent: Protects ornamental designs
+8. Utility Model: Protects minor inventions
+
+APPENDIX D: PATENTABLE SUBJECT MATTER
+
+Patentable:
+- New products and processes
+- Chemical compositions
+- Pharmaceutical compounds
+- Biotechnology inventions
+- Mechanical devices
+- Electronic circuits
+- Software (with hardware)
+- Manufacturing processes
+
+Non-Patentable:
+- Mathematical methods
+- Business methods
+- Computer programs per se
+- Literary/artistic works
+- Scientific theories
+- Medical/surgical methods
+- Plants and animals
+- Traditional knowledge
