@@ -1,0 +1,42 @@
+BIOTECHNOLOGY PATENTS IN INDIA — SECTION 3(j) AND MICRO-ORGANISMS
+Patents Act, Section 3(j) | Budapest Treaty | PPV&FR Interface
+
+1. THE LAW
+Section 3(j) excludes "plants and animals in whole or any part thereof OTHER THAN
+MICRO-ORGANISMS but including seeds, varieties and species and essentially biological processes
+for production or propagation of plants and animals". Consequences:
+(a) MICRO-ORGANISMS (bacteria, fungi, cell lines, plasmids, novel strains) CAN be patented if
+    new, inventive and industrially applicable.
+(b) PLANTS, ANIMALS, SEEDS, VARIETIES cannot be patented — plant varieties go to the sui generis
+    PPV&FR Act, 2001 instead (TRIPS Article 27.3(b) option).
+(c) ESSENTIALLY BIOLOGICAL PROCESSES (conventional crossing/breeding) are excluded; MICROBIOLOGICAL
+    and non-biological processes (e.g., genetic transformation methods) are patentable subject
+    matter.
+
+2. DIMMINACO-TYPE PRINCIPLE
+Biotech processes producing live end-products (e.g., processes for preparing vaccines involving
+live micro-organisms) have been held patentable where they involve human intervention beyond
+essentially biological steps — the process, and novel micro-organisms themselves, are not barred
+by Section 3(j).
+
+3. BT COTTON LITIGATION (MONSANTO v. NUZIVEEDU — NOTE THE NUANCE)
+Monsanto's Bt gene-construct patents and the Section 3(j) exclusion were litigated up to the
+Supreme Court (2019), which set aside a summary invalidation and remanded full trial — leaving
+the patent-vs-3(j) and patent-vs-PPVFR boundary to evidence-led adjudication. The episode shows
+how Section 3(j), the PPV&FR Act and the Seeds/Price-Control orders intersect in agri-biotech.
+
+4. BUDAPEST TREATY (DEPOSIT OF MICRO-ORGANISMS)
+India is party to the Budapest Treaty (1977/1980): where an invention involves a micro-organism
+not publicly available and undescribable in writing, sufficiency of disclosure (Section 10) is met
+by depositing it with an International Depository Authority (India's IMTECH Chandigarh is one).
+Reference the accession number in the specification.
+
+5. AYUSH/BIO INTERFACE
+Fermentation-derived Ayurvedic processes using characterised novel microbial strains, engineered
+enzymes for herbal extraction, and microbiological assays sit on the patentable side; mere use of
+naturally occurring microbes or classical formulations does not.
+
+6. KEYWORDS
+Section 3(j), micro-organisms patentable, essentially biological vs microbiological processes,
+Budapest Treaty deposit, IMTECH, Dimminaco principle, Bt cotton, PPVFR interface, seeds not
+patentable, cell lines.

@@ -133,6 +133,10 @@ def chunk_documents(documents: List):
     return chunks
 
 def create_vector_store(chunks: List):
+    import shutil
+    # Wipe old store first so deleted/renamed docs don't leave stale chunks
+    if os.path.exists(PERSIST_DIR):
+        shutil.rmtree(PERSIST_DIR)
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     
     vectorstore = Chroma.from_documents(

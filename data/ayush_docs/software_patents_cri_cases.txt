@@ -1,0 +1,44 @@
+SOFTWARE PATENTS IN INDIA — SECTION 3(k) AND LANDMARK CASES
+Patents Act, Section 3(k) | CRI Examination Guidelines 2016/2017/2025
+
+1. THE LAW
+Section 3(k) bars "a mathematical or business method or a computer programme per se or
+algorithms". The words "per se" (inserted on the Joint Parliamentary Committee's recommendation)
+mean the bar covers programmes AS SUCH — not every invention implemented using a computer.
+Business-method exclusion is absolute; software exclusion turns on substance.
+
+2. THE CORE TEST: TECHNICAL EFFECT / TECHNICAL CONTRIBUTION
+Examiners look at the SUBSTANCE of claims as a whole (method, system, device or readable-medium
+form does not matter). A computer-related invention escapes 3(k) where it offers a technical
+solution to a technical problem producing effects beyond the program itself — e.g., improved
+memory management, network-level protocols, hardware control, signal processing.
+
+3. FERID ALLANI v. UNION OF INDIA (DELHI HIGH COURT, 12 DEC 2019)
+Application for a "method and device for accessing information sources and services on the web"
+was rejected under 3(k) by the Patent Office and IPAB for want of technical effect. The High
+Court reversed the approach: the bar applies to "computer programs per se", NOT to all
+computer-based inventions; in an age of AI, blockchain and digital products it would be retrograde
+to deny patents merely because a program is involved. Where technical effect/contribution exists,
+the invention is patentable. The Court ordered re-examination under CRI Guidelines and precedents.
+
+4. MICROSOFT TECHNOLOGY LICENSING v. ASSISTANT CONTROLLER (DELHI HIGH COURT, 15 MAY 2023)
+For authentication technology using cookies and two-factor authentication, the Court held the
+solution went beyond user-interface design into network-level communication — "closer to the
+heart of computer and network technology" — hence patentable. Confirmed: 'per se' qualifies ONLY
+computer programmes, while business-method exclusion is absolute.
+
+5. GUIDELINES TIMELINE
+2013 first CRI draft → 2015/2016 guidelines (2016 version strict: effectively required novel
+hardware via a 3-step test) → 2017 revised guidelines (removed the hardware requirement; no
+absolute bar on software claims; substance-over-form) → CRI Guidelines 2025 (current examination
+framework with technical-effect analysis and illustrative examples).
+
+6. DRAFTING TIPS
+Claim the technical system/method with structural features and reference numerals; disclose the
+technical problem, solution and effect in the specification; avoid pure algorithm/flowchart
+claims; support both method and system claim sets.
+
+7. KEYWORDS
+Section 3(k), computer programme per se, technical effect, technical contribution, CRI
+guidelines, Ferid Allani, Microsoft 2D filtering, business method absolute bar, means-plus-
+function, novel hardware, AI patentability.

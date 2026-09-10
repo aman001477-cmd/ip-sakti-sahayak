@@ -1,0 +1,44 @@
+SECTION 3 EXCLUSIONS — COMPLETE WALKTHROUGH (CLAUSES a–p)
+Indian Patents Act, 1970 (as amended; clause (g) omitted in 2002)
+
+Section 3 lists subject matter that is NOT an invention. Authoritative letters verified against the
+bare Act (see also patents_act_2024.pdf in this knowledge base):
+
+(a) FRIVOLOUS / CONTRARY TO NATURAL LAW — e.g., perpetual-motion machines.
+(b) PUBLIC ORDER / MORALITY / HARM — inventions whose exploitation would harm human, animal or
+    plant life, health or the environment (e.g., bio-weapons, human cloning processes).
+(c) SCIENTIFIC PRINCIPLE / ABSTRACT THEORY / NATURAL DISCOVERY — e.g., laws of physics, newly
+    discovered micro-organisms or substances as found in nature.
+(d) NEW FORM WITHOUT ENHANCED EFFICACY — salts, polymorphs, isomers etc. of known substances are
+    the SAME substance unless significantly enhanced THERAPEUTIC efficacy is shown. The
+    anti-evergreening provision (see novartis_glivec_case.txt).
+(e) MERE ADMIXTURE — a substance obtained by mixing known components with only aggregation of
+    properties and no synergy (e.g., a simple physical mixture of two known drugs with no
+    unexpected combined effect).
+(f) MERE ARRANGEMENT / DUPLICATION — re-arranging known devices each working independently in a
+    known way (e.g., bolting a known fan to a known heater with no interaction).
+(g) OMITTED by the Patents (Amendment) Act, 2002 — no longer in force.
+(h) AGRICULTURE / HORTICULTURE METHODS — e.g., a method of pruning or cultivating crops.
+(i) MEDICAL TREATMENT / DIAGNOSIS — surgical, curative, prophylactic, diagnostic or therapeutic
+    treatment of humans or animals. NOTE: the DRUGS, devices and diagnostic KITS themselves remain
+    patentable as products; only the treatment METHOD is barred.
+(j) PLANTS / ANIMALS / SEEDS / VARIETIES / ESSENTIALLY BIOLOGICAL PROCESSES — micro-organisms
+    are expressly EXCEPTED and can be patented. Plant varieties are protected instead under the
+    PPV&FR Act, 2001 (sui generis system).
+(k) MATHEMATICAL / BUSINESS METHOD / COMPUTER PROGRAMME PER SE / ALGORITHMS — software as such
+    is barred, but computer-related inventions with a technical effect or technical contribution
+    may be patentable (see software_patents_cri_cases.txt; CRI Guidelines 2017/2025).
+(l) LITERARY / ARTISTIC WORKS — books, music, films (protected by the Copyright Act, 1957).
+(m) MENTAL ACTS / GAMES — schemes, rules, methods of playing games.
+(n) PRESENTATION OF INFORMATION — e.g., timetables, charts, raw data compilations as such.
+(o) TOPOGRAPHY OF INTEGRATED CIRCUITS — protected separately under the Semiconductor Integrated
+    Circuits Layout-Design Act, 2000.
+(p) TRADITIONAL KNOWLEDGE — inventions which in effect are TK or mere aggregation/duplication of
+    known properties of traditionally known components (see tkdl and neem/turmeric cases).
+
+EXAMINATION TIP (IPO TK Guidelines 2012): TK/biological-material applications must be examined
+particularly under clauses (c), (e), (i), (j) and (p), with Form-1 NBA-declaration compliance.
+
+KEYWORDS: Section 3 exclusions, non-patentable, admixture, arrangement, agriculture method,
+treatment method, plants animals, business method, mental act, presentation of information,
+IC topography, atomic energy Section 4.

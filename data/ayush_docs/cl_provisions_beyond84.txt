@@ -1,0 +1,37 @@
+COMPULSORY LICENSING BEYOND SECTION 84 — SECTIONS 92, 92A, 100–103
+Indian Patents Act, 1970 | Doha Declaration and TRIPS Flexibilities
+
+(For Section 84 and the Bayer-Natco Nexavar licence, see bayer_natco_cl_case.txt.)
+
+1. SECTION 92 — NATIONAL EMERGENCY / PUBLIC NON-COMMERCIAL USE
+Where a national emergency, extreme urgency or public non-commercial use is notified by the
+Central Government, the Controller may grant licences for the relevant patents without the
+Section 84 three-year wait. Never used so far in India, but the provision gained global attention
+during the COVID-19 vaccine-access debate.
+
+2. SECTION 92A — EXPORT LICENCES (DOHA PARAGRAPH 6 SYSTEM)
+Inserted to implement the 2003 WTO Decision/Doha Declaration mechanism: manufacture and export
+of patented pharmaceuticals to countries with insufficient manufacturing capacity, on notified
+terms with adequate remuneration and anti-diversion safeguards.
+
+3. GOVERNMENT USE — SECTIONS 100–103
+The Government (or persons authorised by it) may use any patented invention for Government
+purposes — including mere import — with compensation to the patentee settled by agreement or by
+the High Court. Distinct from compulsory licensing: no three-year wait, no Section 84 procedure.
+
+4. DOHA DECLARATION ON TRIPS AND PUBLIC HEALTH (2001)
+WTO members affirmed that TRIPS "does not and should not prevent members from taking measures
+to protect public health", expressly preserving rights to grant compulsory licences, determine
+their grounds, and define national emergencies. The 2017 TRIPS Amendment (Article 31bis)
+permanently embedded the export mechanism.
+
+5. RELATED SAFEGUARDS IN INDIAN LAW
+- Section 107A (Bolar provision): making/using a patented invention for regulatory-approval
+  research and development is NOT infringement — enables generics to be approval-ready at
+  patent expiry.
+- Parallel importation (Section 107A(b)): import of legitimately-marketed patented products.
+- Pre-grant opposition (Section 25(1)) and Section 3(d)/(p) bars as complementary access tools.
+
+6. KEYWORDS
+Section 92 emergency, Section 92A export, Doha Declaration, Article 31bis, government use
+Section 100, Bolar Section 107A, parallel import, public health flexibilities.

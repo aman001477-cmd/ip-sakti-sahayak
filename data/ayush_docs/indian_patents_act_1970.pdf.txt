@@ -46,8 +46,8 @@ The following are not inventions within the meaning of this Act:
 Section 3(p): Traditional knowledge
 An invention which in effect, is traditional knowledge or which is an aggregation or duplication of known properties of traditionally known components or components shall not be patentable.
 
-Section 3(e): Computer programmes
-A computer programme per se is not patentable unless it is embedded in hardware.
+Section 3(k): Computer programmes
+A mathematical or business method or a computer programme per se or algorithms are not patentable. However, computer-related inventions demonstrating a technical effect or technical contribution beyond the programme itself may be patentable (see CRI Examination Guidelines; Ferid Allani v. Union of India, Delhi High Court 2019).
 
 Section 3(i): Method of treatment
 A method of treatment of the human or animal body by surgery or therapy and diagnostic methods practiced on the human or animal body shall not be an invention.
