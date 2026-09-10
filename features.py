@@ -61,12 +61,12 @@ class IPPDF(FPDF):
         self.ln(40)
         self.set_font('Helvetica', 'B', 28)
         self.set_text_color(0, 51, 102)
-        self.multi_cell(0, 12, title, align='C')
+        self.multi_cell(0, 12, clean_for_pdf(title), align='C')
         self.ln(10)
         if subtitle:
             self.set_font('Helvetica', '', 14)
             self.set_text_color(80)
-            self.multi_cell(0, 8, subtitle, align='C')
+            self.multi_cell(0, 8, clean_for_pdf(subtitle), align='C')
         self.ln(15)
         self.set_font('Helvetica', 'I', 10)
         self.set_text_color(128)
@@ -77,7 +77,7 @@ class IPPDF(FPDF):
     def add_section(self, title: str, content: str):
         self.set_font('Helvetica', 'B', 14)
         self.set_text_color(0, 51, 102)
-        self.cell(0, 10, title, new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 10, clean_for_pdf(title), new_x="LMARGIN", new_y="NEXT")
         self.set_draw_color(255, 153, 51)
         self.set_line_width(0.5)
         self.line(self.l_margin, self.get_y(), self.w - self.r_margin, self.get_y())
@@ -85,7 +85,7 @@ class IPPDF(FPDF):
         
         self.set_font('Helvetica', '', 10)
         self.set_text_color(30)
-        self.multi_cell(0, 5.5, content)
+        self.multi_cell(0, 5.5, clean_for_pdf(content))
         self.ln(6)
     
     def add_bullet_list(self, items: List[str]):
@@ -93,8 +93,8 @@ class IPPDF(FPDF):
         self.set_text_color(30)
         for item in items:
             self.cell(5)
-            self.cell(4, 5.5, chr(8226))
-            self.multi_cell(0, 5.5, f' {item}')
+            self.cell(4, 5.5, "-")
+            self.multi_cell(0, 5.5, clean_for_pdf(f' {item}'))
         self.ln(4)
     
     def add_table(self, headers: List[str], data: List[List[str]], col_widths: Optional[List[float]] = None):
@@ -106,7 +106,7 @@ class IPPDF(FPDF):
         self.set_fill_color(0, 51, 102)
         self.set_text_color(255)
         for i, header in enumerate(headers):
-            self.cell(col_widths[i], 7, header, border=1, fill=True, align='C')
+            self.cell(col_widths[i], 7, clean_for_pdf(header), border=1, fill=True, align='C')
         self.ln()
         
         # Data
@@ -119,10 +119,25 @@ class IPPDF(FPDF):
             else:
                 self.set_fill_color(255)
             for i, cell in enumerate(row):
-                self.cell(col_widths[i], 6, str(cell), border=1, fill=True, align='L')
+                self.cell(col_widths[i], 6, clean_for_pdf(str(cell)), border=1, fill=True, align='L')
             self.ln()
             fill = not fill
         self.ln(6)
+
+
+def clean_for_pdf(text: str) -> str:
+    """Strip markdown + non-latin1 chars so fpdf core fonts never crash
+    on Hindi text, emojis or fancy punctuation."""
+    import re
+    if not text:
+        return ""
+    text = re.sub(r"[*_`#>|]", "", text)
+    text = (
+        text.replace("—", "-").replace("–", "-")
+        .replace("→", "->").replace("←", "<-")
+        .replace("₹", "Rs. ").replace("•", "-").replace("…", "...")
+    )
+    return text.encode("latin-1", errors="ignore").decode("latin-1")
 
 
 def generate_patent_report(query: str, answer: str, sources: List[Dict], jurisdiction: str = "india") -> bytes:
@@ -141,10 +156,10 @@ def generate_patent_report(query: str, answer: str, sources: List[Dict], jurisdi
     
     # Query section
     pdf.add_page()
-    pdf.add_section("Your Query", query)
+    pdf.add_section("Your Query", clean_for_pdf(query))
     
     # Answer section
-    pdf.add_section("Response", answer)
+    pdf.add_section("Response", clean_for_pdf(answer))
     
     # Sources section
     if sources:
@@ -158,7 +173,7 @@ def generate_patent_report(query: str, answer: str, sources: List[Dict], jurisdi
             src_text += f" | Jurisdiction: {src.get('jurisdiction', 'Unknown').upper()}"
             if src.get('content_preview'):
                 src_text += f"\n   Preview: {src['content_preview'][:200]}..."
-            pdf.add_section("", src_text)
+            pdf.add_section("", clean_for_pdf(src_text))
     
     # Footer info
     pdf.add_section("Disclaimer", 

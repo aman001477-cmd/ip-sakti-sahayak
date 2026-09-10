@@ -27,6 +27,9 @@ Thumbs.db
 # Streamlit
 .streamlit/secrets.toml
 
+# App runtime logs (user feedback, never commit)
+feedback_log.jsonl
+
 # Data files (large)
 vector_db/
 data/ayush_docs/*.pdf

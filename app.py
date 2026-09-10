@@ -422,9 +422,11 @@ with st.sidebar:
     if search:
         user_msgs = [m for m in user_msgs if search.lower() in m["content"].lower()]
     if user_msgs:
-        for msg in reversed(user_msgs[-15:]):
-            q = msg["content"][:52] + "..." if len(msg["content"]) > 52 else msg["content"]
-            st.markdown(f"<div class='hist'>💬 {escape(q)}</div>", unsafe_allow_html=True)
+        for h_idx, msg in enumerate(reversed(user_msgs[-15:])):
+            q = msg["content"][:48] + "…" if len(msg["content"]) > 48 else msg["content"]
+            if st.button(f"💬 {q}", key=f"hist_{h_idx}", use_container_width=True, help=msg["content"][:300]):
+                st.session_state.messages.append({"role": "user", "content": msg["content"]})
+                st.rerun()
     else:
         st.caption("No conversations yet")
     st.markdown("</div>", unsafe_allow_html=True)
