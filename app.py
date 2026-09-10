@@ -436,11 +436,16 @@ with st.sidebar:
     st.markdown("<div class='side-sec'>", unsafe_allow_html=True)
     total_q = len([m for m in st.session_state.messages if m["role"] == "user"])
     st.markdown(f"""
-    <div class="stat">
-        <div class="stat-v">{total_q}</div>
-        <div class="stat-l">Questions Asked</div>
+    <div class="stat-box">
+        <div class="stat-val">{total_q}</div>
+        <div class="stat-lbl">Questions Asked</div>
     </div>
     """, unsafe_allow_html=True)
+    fb = st.session_state.get("feedback", {})
+    up = sum(1 for v in fb.values() if v == 1)
+    dn = sum(1 for v in fb.values() if v == -1)
+    if up or dn:
+        st.caption(f"👍 {up} • 👎 {dn}")
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='side-sec'><span class='side-lbl'>Jurisdiction</span>", unsafe_allow_html=True)
@@ -598,7 +603,94 @@ def render_sources(sources):
     st.markdown("</div>", unsafe_allow_html=True)
 
 
+FOLLOWUP_MAP = [
+    (["3(d)", "novartis", "glivec", "gleevec", "evergreening", "efficacy"], [
+        "What is evergreening in pharma patents?",
+        "What was the Bayer Nexavar compulsory licence case?",
+        "What is Section 3(p) of the Indian Patents Act?",
+    ]),
+    (["compulsory", "nexavar", "section 84", "sorafenib", "natco"], [
+        "What is Section 92 national emergency licence?",
+        "What is the Bolar provision under Section 107A?",
+        "What was the Novartis Glivec judgment?",
+    ]),
+    (["nagoya", "benefit sharing", "abs", "bmc", "gene fund"], [
+        "What is the Jeevani case? How did the Kani tribe benefit?",
+        "CBD vs Nagoya Protocol — what's the difference?",
+        "What does the Biodiversity Act cover?",
+    ]),
+    (["darjeeling", "basmati", "geographical indication", "pashmina", "alphonso", "gi tag"], [
+        "What is TKDL and how does it prevent biopiracy?",
+        "Can I patent a Neem-based formulation?",
+        "What is the Turmeric patent case?",
+    ]),
+    (["neem", "turmeric", "tkdl", "biopiracy", "hoodia", "teff"], [
+        "What is the Jeevani benefit-sharing model?",
+        "What is the WIPO GRATK treaty 2024?",
+        "What is Section 3(p) of the Indian Patents Act?",
+    ]),
+    (["software", "3(k)", "cri", "computer programme", "ai patent"], [
+        "What was the Ferid Allani judgment?",
+        "Can microorganisms be patented? Section 3(j)?",
+        "How do I file a patent in India? Steps and forms?",
+    ]),
+    (["pct", "international filing", "national phase"], [
+        "How do I file a patent in India? Steps and forms?",
+        "What is Section 39 foreign filing permission?",
+        "What is the TRIPS Agreement?",
+    ]),
+    (["file a patent", "filing", "form 18", "fer", "examination", "opposition", "fees"], [
+        "What is pre-grant opposition under Section 25?",
+        "What is the 31-month RFE deadline?",
+        "What is Section 39 foreign filing permission?",
+    ]),
+    (["biodiversity", "nba", "sbb"], [
+        "What changed in the 2023 Biodiversity Amendment?",
+        "What is the Jeevani case?",
+        "What is benefit sharing under Nagoya?",
+    ]),
+    (["trips", "wto", "doha"], [
+        "What is the Doha Declaration on public health?",
+        "What is Section 92A export licence?",
+        "WIPO GRATK treaty 2024 — what changed?",
+    ]),
+]
+
+
+def get_followups(question: str, answer: str) -> list:
+    text = f"{question} {answer}".lower()
+    for keywords, suggestions in FOLLOWUP_MAP:
+        if any(k in text for k in keywords):
+            return suggestions[:3]
+    return [
+        "What is Section 3(p) of the Indian Patents Act?",
+        "Can I patent a Neem-based formulation?",
+        "What is the Nagoya Protocol?",
+    ]
+
+
+def log_feedback(question: str, rating: int):
+    import json
+
+    if "feedback" not in st.session_state:
+        st.session_state.feedback = {}
+    st.session_state.feedback[question] = rating
+    try:
+        with open("feedback_log.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(
+                {"ts": datetime.now().isoformat(timespec="seconds"),
+                 "q": question[-300:], "rating": rating},
+                ensure_ascii=False,
+            ) + "\n")
+    except Exception:
+        pass
+
+
 # ---------------- Messages ----------------
+last_asst_idx = max(
+    [i for i, m in enumerate(st.session_state.messages) if m["role"] == "assistant"],
+    default=-1,
+)
 for idx, msg in enumerate(st.session_state.messages):
     if msg["role"] == "user":
         st.markdown(
@@ -638,6 +730,30 @@ for idx, msg in enumerate(st.session_state.messages):
             st.audio(st.session_state[akey], format="audio/mp3")
         if msg.get("sources"):
             render_sources(msg["sources"])
+
+        if idx == last_asst_idx:
+            f1, f2, f3 = st.columns([1, 1, 6])
+            with f1:
+                if st.button("👍", key=f"fb_up_{idx}", help="Good answer", use_container_width=True):
+                    user_q = next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), "")
+                    log_feedback(user_q, 1)
+                    st.toast("Thanks! 👍 Noted.")
+            with f2:
+                if st.button("👎", key=f"fb_dn_{idx}", help="Bad answer", use_container_width=True):
+                    user_q = next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), "")
+                    log_feedback(user_q, -1)
+                    st.toast("Noted 👎 — we'll improve.")
+            st.markdown("<div style='font-size:.72rem;color:#666;margin:.4rem 0 .3rem;'>💡 Go deeper:</div>", unsafe_allow_html=True)
+            fq = get_followups(
+                next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), ""),
+                msg["content"],
+            )
+            fq_cols = st.columns(3)
+            for j, suggestion in enumerate(fq):
+                with fq_cols[j]:
+                    if st.button(suggestion, key=f"fq_{idx}_{j}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": suggestion})
+                        st.rerun()
 
 # ---------------- Unified chat bar: attach + input + mic + send in ONE box ----------------
 with st.container(border=True):
