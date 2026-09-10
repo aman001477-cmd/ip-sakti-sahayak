@@ -1,22 +1,24 @@
 import streamlit as st
 import os
 import io
-import base64
 from html import escape
 from datetime import datetime
 from rag_pipeline import query_rag
 from utils import validate_pdf_folder
 from features import (
-    generate_patent_report, generate_summary_pdf, create_patent_draft_pdf,
-    extract_text_from_image, extract_text_from_pdf, process_uploaded_file,
+    generate_patent_report, process_uploaded_file,
     get_voice_html, get_voice_controls_html, get_available_features,
-    generate_image_prompt_based, generate_diagram_prompt, get_feature_status,
-    PDF_AVAILABLE, OCR_AVAILABLE
+    PDF_AVAILABLE,
 )
 
-st.set_page_config(page_title="IP-SAKTI Sahayak", page_icon="🏛️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="IP-SAKTI Sahayak",
+    page_icon="🏛️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# Session state initialization
+# ---------------- Session state ----------------
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "jurisdiction" not in st.session_state:
@@ -27,394 +29,498 @@ if "show_features" not in st.session_state:
     st.session_state.show_features = False
 if "uploaded_files" not in st.session_state:
     st.session_state.uploaded_files = []
+if "show_uploader" not in st.session_state:
+    st.session_state.show_uploader = False
+if "intro_seen" not in st.session_state:
+    st.session_state.intro_seen = False
 
-# Inject voice HTML once
+# Voice engine (browser Speech API helpers)
 st.components.v1.html(get_voice_html(), height=0)
 
+# ---------------- Premium design system ----------------
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    .stApp { 
-        font-family: 'Inter', sans-serif; 
-        background: #000000 !important;
-    }
-    
-    .main .block-container {
-        max-width: 900px;
-        padding: 1rem 2rem 7rem;
-        background: transparent;
-    }
-    
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 0;
-        border-bottom: 1px solid #2a2a2a;
-        margin-bottom: 1.5rem;
-    }
-    .header-left { display: flex; align-items: center; gap: 1rem; }
-    .logo { width: 48px; height: 48px; background: linear-gradient(135deg, #FF9933, #138808); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    .title { font-size: 1.4rem; font-weight: 700; color: #fff; }
-    .subtitle { font-size: 0.85rem; color: #888; }
-    .juris-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-    .juris-india { background: #FFF3E0; color: #E65100; }
-    .juris-intl { background: #E3F2FD; color: #1565C0; }
-    .feature-btn { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #ccc; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.4rem; }
-    .feature-btn:hover { border-color: #FF9933; background: #222; }
-    .feature-btn.active { background: linear-gradient(135deg, #FF9933, #138808); color: white; border: none; }
-    
-    .msg { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .msg-user { flex-direction: row-reverse; }
-    .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
-    .avatar-user { background: linear-gradient(135deg, #FF9933, #FF6B00); color: white; }
-    .avatar-bot { background: linear-gradient(135deg, #138808, #0D6B06); color: white; }
-    .bubble { max-width: 80%; padding: 0.85rem 1.1rem; border-radius: 16px; font-size: 0.95rem; line-height: 1.7; }
-    .msg-user .bubble { background: linear-gradient(135deg, #FF9933, #FF7A00); color: white; border-bottom-right-radius: 4px; }
-    .msg-bot .bubble { background: #1a1a1a; border: 1px solid #2a2a2a; color: #e0e0e0; border-bottom-left-radius: 4px; }
-    
-    .sources { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #2a2a2a; }
-    .sources-label { font-size: 0.7rem; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-    .source-item { background: #111; border: 1px solid #222; border-left: 3px solid #138808; border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.4rem; font-size: 0.8rem; }
-    .source-file { font-weight: 600; color: #e0e0e0; }
-    .source-meta { color: #666; font-size: 0.7rem; margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .source-preview { color: #888; font-size: 0.75rem; margin-top: 4px; font-style: italic; line-height: 1.4; }
-    .tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 0.6rem; font-weight: 600; }
-    .tag-india { background: #FFF3E0; color: #E65100; }
-    .tag-intl { background: #E3F2FD; color: #1565C0; }
-    
-    .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 1.5rem 0; }
-    .quick-btn { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.8rem; text-align: center; color: #ccc; font-weight: 500; font-size: 0.8rem; transition: all 0.2s; cursor: pointer; }
-    .quick-btn:hover { border-color: #FF9933; background: #222; transform: translateY(-2px); }
-    
-    .footer { position: fixed; bottom: 0; left: 0; right: 0; background: #0a0a0a; border-top: 1px solid #2a2a2a; padding: 0.6rem; text-align: center; font-size: 0.75rem; color: #666; z-index: 100; }
-    .footer strong { color: #fff; }
-    .footer .sih { color: #FF9933; }
-    
-    section[data-testid="stSidebar"] { background: #0a0a0a !important; border-right: 1px solid #2a2a2a !important; }
-    .sidebar-header { text-align: center; padding: 1.5rem 1rem 1rem; border-bottom: 1px solid #2a2a2a; margin-bottom: 1rem; }
-    .sidebar-logo { width: 56px; height: 56px; background: linear-gradient(135deg, #FF9933, #138808); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 0.75rem; }
-    .sidebar-title { font-weight: 700; color: #e0e0e0; }
-    .sidebar-section { padding: 0 1rem 1rem; }
-    .sidebar-label { font-size: 0.7rem; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; display: block; }
-    .hist-item { background: #111; border: 1px solid #222; border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.4rem; font-size: 0.78rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .stat-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.8rem; text-align: center; margin-bottom: 1rem; }
-    .stat-val { font-size: 1.5rem; font-weight: 700; color: #FF9933; }
-    .stat-lbl { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
-    .file-item { background: #111; border: 1px solid #222; border-radius: 8px; padding: 0.5rem 0.75rem; margin-bottom: 0.4rem; font-size: 0.75rem; color: #ccc; display: flex; justify-content: space-between; align-items: center; }
-    .file-info { display: flex; align-items: center; gap: 0.5rem; }
-    .file-icon { font-size: 1rem; }
-    
-    .stButton > button { border-radius: 8px !important; font-weight: 500 !important; border: 1px solid #2a2a2a !important; background: #1a1a1a !important; color: #ccc !important; }
-    .stButton > button:hover { border-color: #FF9933 !important; }
-    .stButton > button[data-testid="stBaseButton-primary"] { background: linear-gradient(135deg, #FF9933, #138808) !important; color: white !important; border: none !important; }
-    
-    .stChatInput { position: fixed !important; bottom: 2.5rem !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 900px !important; z-index: 999 !important; }
-    .stChatInput > div { border-radius: 24px !important; background: #1a1a1a !important; border: 1px solid #2a2a2a !important; box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important; }
-    .stChatInput > div:focus-within { border-color: #FF9933 !important; box-shadow: 0 0 0 3px rgba(255,153,51,0.15), 0 4px 20px rgba(0,0,0,0.4) !important; }
-    .stChatInput textarea { color: #e0e0e0 !important; }
-    
-    .feature-panel { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
-    .feature-panel h4 { color: #FF9933; margin-bottom: 0.75rem; font-size: 0.95rem; }
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; }
-    .feature-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.8rem; text-align: center; transition: all 0.2s; }
-    .feature-card:hover { border-color: #FF9933; transform: translateY(-2px); }
-    .feature-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
-    .feature-name { font-weight: 600; font-size: 0.8rem; color: #e0e0e0; }
-    .feature-desc { font-size: 0.65rem; color: #888; margin-top: 0.2rem; }
-    
-    .download-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: linear-gradient(135deg, #FF9933, #138808); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.8rem; text-decoration: none; margin: 0.25rem; }
-    .download-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,153,51,0.4); }
-    
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FF9933, #138808); border-radius: 3px; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
+
+:root {
+    --saffron: #FF9933;
+    --saffron-deep: #FF6B00;
+    --green: #138808;
+    --green-deep: #0D6B06;
+    --gold: #FFD700;
+    --ink: #000000;
+    --panel: #0B0B0D;
+    --card: #121214;
+    --card-2: #17171A;
+    --line: #232327;
+    --txt: #F2F2F3;
+    --muted: #9A9AA3;
+    --faint: #5C5C66;
+}
+
+.stApp {
+    font-family: 'Inter', sans-serif;
+    background: #000000 !important;
+    color: var(--txt);
+}
+
+.main .block-container {
+    max-width: 860px;
+    padding: 0 1.5rem 8rem;
+    background: transparent;
+}
+
+/* ---------- ambient background ---------- */
+.orb { position: fixed; border-radius: 50%; filter: blur(110px); pointer-events: none; z-index: 0; }
+.orb-a { width: 480px; height: 480px; top: -160px; left: -140px;
+    background: radial-gradient(circle, rgba(255,153,51,.14), transparent 70%);
+    animation: drift 14s ease-in-out infinite alternate; }
+.orb-b { width: 520px; height: 520px; bottom: -200px; right: -160px;
+    background: radial-gradient(circle, rgba(19,136,8,.16), transparent 70%);
+    animation: drift 18s ease-in-out infinite alternate-reverse; }
+.orb-c { width: 300px; height: 300px; top: 40%; left: 55%;
+    background: radial-gradient(circle, rgba(255,215,0,.06), transparent 70%);
+    animation: drift 22s ease-in-out infinite alternate; }
+@keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to { transform: translate(60px, 40px) scale(1.12); }
+}
+
+/* ---------- intro splash ---------- */
+#intro-splash {
+    position: fixed; inset: 0; z-index: 9999;
+    background: radial-gradient(ellipse at 50% 35%, #101014 0%, #000 65%);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .8s ease; cursor: pointer;
+}
+#intro-splash.hide { opacity: 0; pointer-events: none; }
+.intro-inner { text-align: center; padding: 2rem; max-width: 560px; }
+.intro-emblem { position: relative; width: 110px; height: 110px; margin: 0 auto 1.4rem; }
+.intro-ring { position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, #FF9933, #FFD700, #138808, #FF9933);
+    animation: spin 2.4s linear infinite; filter: saturate(1.2); }
+.intro-core { position: absolute; inset: 7px; border-radius: 50%; background: #0a0a0c;
+    display: flex; align-items: center; justify-content: center; font-size: 2.6rem;
+    box-shadow: inset 0 0 24px rgba(255,153,51,.25); animation: corePulse 2.4s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes corePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.intro-title {
+    font-family: 'Fraunces', serif; font-size: 2.4rem; font-weight: 700; letter-spacing: .5px;
+    background: linear-gradient(100deg, #fff 20%, #FF9933 40%, #FFD700 50%, #7ddf8e 60%, #fff 80%);
+    background-size: 250% auto; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite;
+    margin-bottom: .4rem; }
+@keyframes shimmer { to { background-position: 250% center; } }
+.intro-sub { color: var(--muted); font-size: .85rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1.8rem; }
+.intro-sub b { color: var(--saffron); }
+.intro-bar { height: 4px; border-radius: 4px; background: #1c1c20; overflow: hidden; margin: 0 auto 1rem; max-width: 340px; }
+.intro-bar span { display: block; height: 100%; width: 0; border-radius: 4px;
+    background: linear-gradient(90deg, #FF9933, #FFD700, #138808);
+    animation: load 3.4s ease forwards; }
+@keyframes load { to { width: 100%; } }
+.intro-status { color: var(--faint); font-size: .78rem; animation: statusCycle 3.4s ease forwards; }
+@keyframes statusCycle { 0% { opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: .4; } }
+.intro-tap { margin-top: 1.2rem; color: #3d3d46; font-size: .72rem; }
+
+/* ---------- sticky top bar ---------- */
+.topbar {
+    position: sticky; top: 0; z-index: 900;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: .8rem 1.1rem; margin: 0 -1.5rem 1.4rem;
+    background: rgba(5,5,7,.78); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.brand { display: flex; align-items: center; gap: .8rem; }
+.brand-mark { width: 44px; height: 44px; border-radius: 13px;
+    background: linear-gradient(135deg, #FF9933, #FF6B00 55%, #138808);
+    display: flex; align-items: center; justify-content: center; font-size: 1.35rem;
+    box-shadow: 0 6px 22px rgba(255,122,0,.35); transition: transform .25s ease; }
+.brand-mark:hover { transform: rotate(-8deg) scale(1.06); }
+.brand-name { font-weight: 800; font-size: 1.02rem; letter-spacing: .2px; color: #fff; }
+.brand-name em { font-style: normal;
+    background: linear-gradient(90deg, #FF9933, #FFD700);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.brand-tag { font-size: .68rem; color: var(--muted); letter-spacing: .4px; }
+.top-right { display: flex; align-items: center; gap: .55rem; }
+.pill { display: inline-flex; align-items: center; gap: .35rem;
+    padding: .34rem .8rem; border-radius: 100px; font-size: .72rem; font-weight: 700; }
+.pill-india { background: rgba(255,153,51,.14); color: #FFB25E; border: 1px solid rgba(255,153,51,.35); }
+.pill-intl { background: rgba(96,165,250,.12); color: #7FB3FF; border: 1px solid rgba(96,165,250,.35); }
+.sih-chip { display: inline-flex; align-items: center; gap: .35rem;
+    padding: .34rem .8rem; border-radius: 100px; font-size: .72rem; font-weight: 800;
+    color: #1a1200; background: linear-gradient(100deg, #FFD700, #FFA500, #FFD700);
+    background-size: 220% auto; animation: shimmer 4s linear infinite;
+    box-shadow: 0 0 14px rgba(255,215,0,.35); }
+
+/* ---------- hero ---------- */
+.hero { text-align: center; padding: 2.2rem 1rem 1.2rem; animation: rise .7s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: .45rem;
+    font-size: .68rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--saffron); border: 1px solid rgba(255,153,51,.35);
+    background: rgba(255,153,51,.07); padding: .4rem 1rem; border-radius: 100px; margin-bottom: 1.1rem; }
+.hero-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80;
+    box-shadow: 0 0 10px #4ade80; animation: blink 1.8s ease infinite; }
+@keyframes blink { 50% { opacity: .35; } }
+.hero h1 { font-family: 'Fraunces', serif; font-size: 2.5rem; line-height: 1.12; margin: 0 0 .6rem; color: #fff; }
+.hero h1 .grad { background: linear-gradient(92deg, #FF9933 10%, #FFD700 45%, #7ddf8e 90%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { color: var(--muted); font-size: .95rem; max-width: 560px; margin: 0 auto; }
+.sugg-label { text-align: center; color: var(--faint); font-size: .7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; margin: 1.6rem 0 .8rem; }
+.cap-row { display: flex; justify-content: center; gap: 1.3rem; flex-wrap: wrap;
+    margin-top: 1.4rem; color: var(--faint); font-size: .72rem; }
+.cap-row span { display: inline-flex; align-items: center; gap: .35rem; }
+
+/* ---------- messages ---------- */
+.msg { display: flex; gap: .7rem; margin-bottom: 1.15rem; align-items: flex-start;
+    animation: msgIn .45s cubic-bezier(.2,.8,.3,1) both; }
+.msg:nth-child(2) { animation-delay: .05s; } .msg:nth-child(3) { animation-delay: .1s; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+.msg-user { flex-direction: row-reverse; }
+.avatar { width: 34px; height: 34px; border-radius: 12px; flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: transform .2s; }
+.avatar:hover { transform: scale(1.12) rotate(-4deg); }
+.avatar-user { background: linear-gradient(135deg, #FF9933, #FF6B00); box-shadow: 0 4px 14px rgba(255,122,0,.35); }
+.avatar-bot { background: linear-gradient(135deg, #138808, #0a4d04); box-shadow: 0 4px 14px rgba(19,136,8,.4);
+    border: 1px solid rgba(125,223,142,.25); }
+.bubble { max-width: 80%; padding: .85rem 1.05rem; border-radius: 18px; font-size: .93rem; line-height: 1.7; }
+.msg-user .bubble { background: linear-gradient(135deg, #FF9933, #F96A00); color: #fff;
+    border-bottom-right-radius: 6px; box-shadow: 0 6px 20px rgba(255,122,0,.25); }
+.msg-bot .bubble { background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.09); color: #EDEDEF;
+    border-bottom-left-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+.bubble strong { color: #fff; }
+
+/* ---------- sources ---------- */
+.sources { margin: .7rem 0 0 44px; padding-top: .7rem; border-top: 1px dashed rgba(255,255,255,.12); }
+.sources-label { font-size: .66rem; font-weight: 800; color: var(--faint);
+    text-transform: uppercase; letter-spacing: 1.6px; margin-bottom: .55rem; }
+.source-item { background: linear-gradient(180deg, var(--card-2), var(--card));
+    border: 1px solid var(--line); border-left: 3px solid transparent;
+    border-image: linear-gradient(180deg, #FF9933, #138808) 1;
+    border-radius: 12px; padding: .65rem .85rem; margin-bottom: .45rem;
+    transition: transform .2s ease, box-shadow .2s ease; }
+.source-item:hover { transform: translateX(4px); box-shadow: 0 8px 20px rgba(0,0,0,.4); }
+.source-file { font-weight: 700; font-size: .82rem; color: #fff; }
+.source-meta { color: var(--muted); font-size: .7rem; margin-top: 3px;
+    display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+.source-preview { color: #8b8b95; font-size: .75rem; margin-top: 5px; font-style: italic; line-height: 1.5; }
+.tag { display: inline-block; padding: 1px 7px; border-radius: 5px; font-size: .62rem; font-weight: 800; }
+.tag-india { background: rgba(255,153,51,.15); color: #FFB25E; border: 1px solid rgba(255,153,51,.3); }
+.tag-international { background: rgba(96,165,250,.14); color: #7FB3FF; border: 1px solid rgba(96,165,250,.3); }
+
+/* ---------- action row ---------- */
+.act-row { display: flex; gap: .45rem; margin: .45rem 0 0 44px; }
+
+/* ---------- thinking ---------- */
+.thinking { display: flex; align-items: center; gap: .6rem; color: var(--muted); font-size: .82rem; }
+.dots { display: inline-flex; gap: 5px; }
+.dots span { width: 7px; height: 7px; border-radius: 50%;
+    background: linear-gradient(135deg, #FF9933, #138808); animation: pulse 1s ease-in-out infinite; }
+.dots span:nth-child(2) { animation-delay: .15s; } .dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes pulse { 50% { transform: scale(1.4); opacity: .5; } }
+
+/* ---------- toolbar + input ---------- */
+.toolbar { position: fixed; bottom: 7.2rem; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 860px; z-index: 998;
+    display: flex; justify-content: center; gap: .5rem; padding: 0 1rem; }
+.tool { display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(20,20,24,.9); border: 1px solid var(--line); color: #cfcfd6;
+    border-radius: 100px; padding: .42rem .9rem; font-size: .75rem; font-weight: 600;
+    backdrop-filter: blur(12px); transition: all .2s ease; cursor: pointer; }
+.tool:hover { border-color: var(--saffron); color: #fff; transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(255,122,0,.25); }
+.tool.on { background: linear-gradient(135deg, #FF9933, #138808); color: #fff; border: none; }
+
+.stChatInput { position: fixed !important; bottom: 2.6rem !important; left: 50% !important;
+    transform: translateX(-50%) !important; width: 100% !important; max-width: 860px !important;
+    z-index: 999 !important; padding: 0 1rem !important; }
+.stChatInput > div { border-radius: 24px !important; background: rgba(18,18,22,.92) !important;
+    border: 1px solid rgba(255,255,255,.1) !important;
+    box-shadow: 0 12px 40px rgba(0,0,0,.55) !important;
+    backdrop-filter: blur(16px) !important; transition: all .25s ease !important; }
+.stChatInput > div:focus-within { border-color: rgba(255,153,51,.7) !important;
+    box-shadow: 0 0 0 3px rgba(255,153,51,.14), 0 12px 40px rgba(0,0,0,.55) !important; }
+.stChatInput textarea { color: #f2f2f3 !important; }
+
+/* ---------- footer ---------- */
+.footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(4,4,6,.9); backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(255,255,255,.07);
+    text-align: center; padding: .55rem; font-size: .72rem; color: var(--faint); }
+.footer strong { color: #fff; } .footer .sih { color: var(--saffron); font-weight: 700; }
+.footer .tri { display: inline-block; width: 26px; height: 3px; border-radius: 2px; vertical-align: middle;
+    background: linear-gradient(90deg, #FF9933, #fff, #138808); margin: 0 .5rem; }
+
+/* ---------- sidebar ---------- */
+section[data-testid="stSidebar"] { background: #070709 !important; border-right: 1px solid rgba(255,255,255,.07) !important; }
+.side-hero { text-align: center; padding: 1.6rem 1rem 1.1rem; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 1rem; }
+.side-mark { width: 54px; height: 54px; border-radius: 16px; margin: 0 auto .6rem;
+    background: linear-gradient(135deg, #FF9933, #FF6B00 55%, #138808);
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+    box-shadow: 0 8px 26px rgba(255,122,0,.35); animation: floaty 4s ease-in-out infinite; }
+@keyframes floaty { 50% { transform: translateY(-4px); } }
+.side-title { font-weight: 800; color: #fff; font-size: .95rem; }
+.side-cap { font-size: .62rem; color: var(--faint); text-transform: uppercase; letter-spacing: 2px; margin-top: .15rem; }
+.side-sec { padding: 0 1rem 1.1rem; }
+.side-lbl { font-size: .64rem; font-weight: 800; color: var(--faint);
+    text-transform: uppercase; letter-spacing: 1.6px; margin-bottom: .55rem; display: block; }
+.hist { background: #101013; border: 1px solid #1e1e23; border-radius: 10px;
+    padding: .55rem .75rem; margin-bottom: .4rem; font-size: .76rem; color: #c9c9d1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: all .2s; }
+.hist:hover { border-color: rgba(255,153,51,.5); background: #15151a; transform: translateX(3px); }
+.stat { background: linear-gradient(180deg, #141417, #0e0e11); border: 1px solid #222227;
+    border-radius: 14px; padding: .9rem; text-align: center; margin-bottom: 1rem; }
+.stat-v { font-size: 1.6rem; font-weight: 800;
+    background: linear-gradient(90deg, #FF9933, #FFD700);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-l { font-size: .62rem; color: var(--faint); text-transform: uppercase; letter-spacing: 1.6px; margin-top: .2rem; }
+.doc { display: flex; align-items: center; gap: .5rem; font-size: .74rem; color: #b9b9c2;
+    padding: .35rem .1rem; border-bottom: 1px dashed rgba(255,255,255,.06); }
+
+/* ---------- buttons / inputs ---------- */
+.stButton > button { border-radius: 12px !important; font-weight: 600 !important;
+    border: 1px solid #26262c !important; background: #131316 !important; color: #d7d7de !important;
+    transition: all .2s ease !important; }
+.stButton > button:hover { border-color: rgba(255,153,51,.6) !important; transform: translateY(-2px) !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,.4) !important; }
+.stButton > button[data-testid="stBaseButton-primary"] {
+    background: linear-gradient(135deg, #FF9933, #c25e00 60%, #138808) !important;
+    color: #fff !important; border: none !important;
+    box-shadow: 0 8px 22px rgba(255,122,0,.35) !important; }
+.stTextInput input, .stTextArea textarea { background: #101013 !important; color: #eee !important;
+    border: 1px solid #26262c !important; border-radius: 10px !important; }
+.feature-card { background: #101013; border: 1px solid #202026; border-radius: 12px;
+    padding: .7rem; text-align: center; margin-bottom: .45rem; }
+.feature-card .fi { font-size: 1.3rem; } .feature-card .fn { font-weight: 700; font-size: .76rem; color: #fff; }
+.feature-card .fd { font-size: .66rem; color: var(--muted); }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FF9933, #138808); border-radius: 3px; }
+
+@media (max-width: 640px) {
+    .hero h1 { font-size: 1.8rem; }
+    .bubble { max-width: 88%; }
+    .brand-tag { display: none; }
+    .topbar { margin: 0 -.75rem 1rem; }
+}
 </style>
 """, unsafe_allow_html=True)
 
-# ============================================================
-# SIDEBAR
-# ============================================================
+# ---------------- Intro splash (once per session) ----------------
+if not st.session_state.intro_seen:
+    st.session_state.intro_seen = True
+    st.components.v1.html("""
+    <div id="intro-splash" onclick="this.remove()">
+      <div class="intro-inner">
+        <div class="intro-emblem"><div class="intro-ring"></div><div class="intro-core">🏛️</div></div>
+        <div class="intro-title">IP-SAKTI Sahayak</div>
+        <div class="intro-sub">Ministry of Ayush &nbsp;•&nbsp; <b>SIH 2026</b> &nbsp;•&nbsp; Team NEXUS</div>
+        <div class="intro-bar"><span></span></div>
+        <div class="intro-status">Loading knowledge base… connecting secure channels…</div>
+        <div class="intro-tap">tap anywhere to enter</div>
+      </div>
+    </div>
+    <style>
+      #intro-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+        background:radial-gradient(ellipse at 50% 35%,#101014 0%,#000 65%);transition:opacity .8s ease;cursor:pointer}
+      #intro-splash.hide{opacity:0;pointer-events:none}
+      .intro-inner{text-align:center;padding:2rem;max-width:560px;font-family:Inter,sans-serif}
+      .intro-emblem{position:relative;width:110px;height:110px;margin:0 auto 1.4rem}
+      .intro-ring{position:absolute;inset:0;border-radius:50%;
+        background:conic-gradient(from 0deg,#FF9933,#FFD700,#138808,#FF9933);animation:spin 2.4s linear infinite}
+      .intro-core{position:absolute;inset:7px;border-radius:50%;background:#0a0a0c;display:flex;align-items:center;
+        justify-content:center;font-size:2.6rem;box-shadow:inset 0 0 24px rgba(255,153,51,.25);animation:corePulse 2.4s ease-in-out infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+      @keyframes corePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+      .intro-title{font-size:2.4rem;font-weight:700;letter-spacing:.5px;margin-bottom:.4rem;
+        background:linear-gradient(100deg,#fff 20%,#FF9933 40%,#FFD700 50%,#7ddf8e 60%,#fff 80%);
+        background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+        animation:shimmer 3s linear infinite}
+      @keyframes shimmer{to{background-position:250% center}}
+      .intro-sub{color:#9A9AA3;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.8rem}
+      .intro-sub b{color:#FF9933}
+      .intro-bar{height:4px;border-radius:4px;background:#1c1c20;overflow:hidden;margin:0 auto 1rem;max-width:340px}
+      .intro-bar span{display:block;height:100%;width:0;border-radius:4px;
+        background:linear-gradient(90deg,#FF9933,#FFD700,#138808);animation:load 3.4s ease forwards}
+      @keyframes load{to{width:100%}}
+      .intro-status{color:#5C5C66;font-size:.78rem}
+      .intro-tap{margin-top:1.2rem;color:#3d3d46;font-size:.72rem}
+    </style>
+    <script>
+      setTimeout(function(){
+        var s = document.getElementById('intro-splash');
+        if (s) { s.classList.add('hide'); setTimeout(function(){ s.remove(); }, 850); }
+      }, 4200);
+    </script>
+    """, height=0)
+
+# ---------------- Ambient background ----------------
+st.markdown(
+    '<div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>',
+    unsafe_allow_html=True,
+)
+
+# ---------------- Sidebar ----------------
 with st.sidebar:
     st.markdown("""
-    <div class="sidebar-header">
-        <div class="sidebar-logo">🏛️</div>
-        <div class="sidebar-title">IP-SAKTI Sahayak</div>
-        <div style="font-size:0.65rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">Chat History</div>
+    <div class="side-hero">
+        <div class="side-mark">🏛️</div>
+        <div class="side-title">IP-SAKTI Sahayak</div>
+        <div class="side-cap">Chat History</div>
     </div>
     """, unsafe_allow_html=True)
-    
-    search = st.text_input("🔍 Search history", placeholder="Search questions...", label_visibility="collapsed")
-    
-    st.markdown("<div class='sidebar-section'>", unsafe_allow_html=True)
-    st.markdown("<span class='sidebar-label'>Recent Questions</span>", unsafe_allow_html=True)
-    
+
+    search = st.text_input("Search", placeholder="🔍 Search questions...", label_visibility="collapsed")
+
+    st.markdown("<div class='side-sec'><span class='side-lbl'>Recent Questions</span>", unsafe_allow_html=True)
     user_msgs = [m for m in st.session_state.messages if m["role"] == "user"]
     if search:
         user_msgs = [m for m in user_msgs if search.lower() in m["content"].lower()]
-    
     if user_msgs:
         for msg in reversed(user_msgs[-15:]):
-            q = msg["content"][:50] + "..." if len(msg["content"]) > 50 else msg["content"]
-            st.markdown(f"<div class='hist-item'>💬 {q}</div>", unsafe_allow_html=True)
+            q = msg["content"][:52] + "..." if len(msg["content"]) > 52 else msg["content"]
+            st.markdown(f"<div class='hist'>💬 {escape(q)}</div>", unsafe_allow_html=True)
     else:
         st.caption("No conversations yet")
-    
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
     if st.button("🗑️ Clear History", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
-    
-    st.markdown("<div class='sidebar-section'>", unsafe_allow_html=True)
+
+    st.markdown("<div class='side-sec'>", unsafe_allow_html=True)
     total_q = len([m for m in st.session_state.messages if m["role"] == "user"])
     st.markdown(f"""
-    <div class="stat-box">
-        <div class="stat-val">{total_q}</div>
-        <div class="stat-lbl">Questions Asked</div>
+    <div class="stat">
+        <div class="stat-v">{total_q}</div>
+        <div class="stat-l">Questions Asked</div>
     </div>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Jurisdiction
-    st.markdown("<div class='sidebar-section'>", unsafe_allow_html=True)
-    st.markdown("<span class='sidebar-label'>Jurisdiction</span>", unsafe_allow_html=True)
-    juris = st.radio("", ["india", "international"], format_func=lambda x: "🇮🇳 India" if x == "india" else "🌍 International", index=0 if st.session_state.jurisdiction == "india" else 1, label_visibility="collapsed")
+
+    st.markdown("<div class='side-sec'><span class='side-lbl'>Jurisdiction</span>", unsafe_allow_html=True)
+    juris = st.radio(
+        "", ["india", "international"],
+        format_func=lambda x: "🇮🇳 India" if x == "india" else "🌍 International",
+        index=0 if st.session_state.jurisdiction == "india" else 1,
+        label_visibility="collapsed",
+    )
     st.session_state.jurisdiction = juris
     st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Knowledge Base
-    st.markdown("<div class='sidebar-section'>", unsafe_allow_html=True)
-    st.markdown("<span class='sidebar-label'>Knowledge Base</span>", unsafe_allow_html=True)
-    if validate_pdf_folder("data/ayush_docs"):
-        files = os.listdir("data/ayush_docs")
-        pdfs = len([f for f in files if f.endswith('.pdf')])
-        txts = len([f for f in files if f.endswith('.txt')])
-        st.caption(f"{pdfs} PDFs • {txts} Text files")
-        for f in sorted(files)[:10]:
-            name = f.replace('.pdf','').replace('.txt','').replace('_',' ').title()
-            st.caption(f"📄 {name[:35]}")
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Voice Mode (always visible)
-    st.markdown("<div class='sidebar-section'>", unsafe_allow_html=True)
-    st.markdown("<span class='sidebar-label'>🎤 Voice Assistant</span>", unsafe_allow_html=True)
+
+    st.markdown("<div class='side-sec'><span class='side-lbl'>🎤 Voice Assistant</span>", unsafe_allow_html=True)
     voice_label = "🔴 Voice Mode ON" if st.session_state.voice_mode else "🎤 Enable Voice Mode"
     if st.button(voice_label, use_container_width=True, key="toggle_voice"):
         st.session_state.voice_mode = not st.session_state.voice_mode
         st.rerun()
     if st.session_state.voice_mode:
-        st.caption("Click 🎤 mic to speak • Click 🔊 to hear answers")
+        st.caption("🎤 mic = speak question • 🔊 = hear answer")
     st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Features Panel
-    st.markdown("<div class='sidebar-section'>", unsafe_allow_html=True)
-    st.markdown("<span class='sidebar-label'>Advanced Features</span>", unsafe_allow_html=True)
-    
+
+    st.markdown("<div class='side-sec'><span class='side-lbl'>Knowledge Base</span>", unsafe_allow_html=True)
+    if validate_pdf_folder("data/ayush_docs"):
+        files = os.listdir("data/ayush_docs")
+        pdfs = len([f for f in files if f.endswith(".pdf")])
+        txts = len([f for f in files if f.endswith(".txt")])
+        st.caption(f"{pdfs} PDFs • {txts} Text files • 500+ chunks")
+        for f in sorted(files)[:10]:
+            name = f.replace(".pdf", "").replace(".txt", "").replace("_", " ").title()
+            st.markdown(f"<div class='doc'>📄 {escape(name[:36])}</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("<div class='side-sec'><span class='side-lbl'>Advanced Features</span>", unsafe_allow_html=True)
     if st.button("🛠️ Feature Panel", use_container_width=True, key="toggle_features"):
         st.session_state.show_features = not st.session_state.show_features
         st.rerun()
-    
+
     if st.session_state.show_features:
-        features = get_available_features()
-        st.markdown("<div class='feature-panel'>", unsafe_allow_html=True)
-        st.markdown("<h4>Available Features</h4>", unsafe_allow_html=True)
-        for feat in features:
+        for feat in get_available_features():
             st.markdown(f"""
             <div class="feature-card">
-                <div class="feature-icon">{feat['icon']}</div>
-                <div class="feature-name">{feat['name']}</div>
-                <div class="feature-desc">{feat['desc']}</div>
+                <div class="fi">{feat['icon']}</div>
+                <div class="fn">{feat['name']}</div>
+                <div class="fd">{feat['desc']}</div>
             </div>
             """, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Quick action buttons for features
-        if PDF_AVAILABLE:
-            if st.button("📄 Generate PDF Report", use_container_width=True, key="gen_pdf_report"):
-                if st.session_state.messages:
-                    last_bot = next((m for m in reversed(st.session_state.messages) if m["role"] == "assistant"), None)
-                    if last_bot:
-                        pdf_bytes = generate_patent_report(
-                            query=st.session_state.messages[-2]["content"] if len(st.session_state.messages) > 1 else "Query",
-                            answer=last_bot["content"],
-                            sources=last_bot.get("sources", []),
-                            jurisdiction=st.session_state.jurisdiction
-                        )
-                        st.download_button(
-                            "⬇️ Download Report",
-                            data=pdf_bytes,
-                            file_name=f"IP_SAKTI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                            mime="application/pdf",
-                            use_container_width=True
-                        )
-    
+
+        if PDF_AVAILABLE and st.button("📄 Generate PDF Report", use_container_width=True, key="gen_pdf_report"):
+            last_bot = next((m for m in reversed(st.session_state.messages) if m["role"] == "assistant"), None)
+            if last_bot:
+                pdf_bytes = generate_patent_report(
+                    query=st.session_state.messages[-2]["content"] if len(st.session_state.messages) > 1 else "Query",
+                    answer=last_bot["content"],
+                    sources=last_bot.get("sources", []),
+                    jurisdiction=st.session_state.jurisdiction,
+                )
+                st.download_button(
+                    "⬇️ Download Report",
+                    data=pdf_bytes,
+                    file_name=f"IP_SAKTI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                    mime="application/pdf",
+                    use_container_width=True,
+                )
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ============================================================
-# HEADER
-# ============================================================
-juris_class = "juris-india" if st.session_state.jurisdiction == "india" else "juris-intl"
-juris_label = "🇮🇳 India" if st.session_state.jurisdiction == "india" else "🌍 International"
+# ---------------- Sticky top bar ----------------
+is_india = st.session_state.jurisdiction == "india"
+pill_cls = "pill-india" if is_india else "pill-intl"
+pill_txt = "🇮🇳 India" if is_india else "🌍 International"
+st.markdown(
+    '<div class="topbar">'
+    '<div class="brand"><div class="brand-mark">🏛️</div>'
+    '<div><div class="brand-name">IP-SAKTI <em>Sahayak</em></div>'
+    '<div class="brand-tag">Ministry of Ayush • IPR Assistant</div></div></div>'
+    f'<div class="top-right"><span class="pill {pill_cls}">{pill_txt}</span>'
+    '<span class="sih-chip">🏆 SIH 2026</span></div>'
+    "</div>",
+    unsafe_allow_html=True,
+)
 
-voice_btn_class = "feature-btn active" if st.session_state.voice_mode else "feature-btn"
-voice_btn_text = "🔴 Voice ON" if st.session_state.voice_mode else "🎤 Voice"
-
-st.markdown(f"""
-<style>
-    @keyframes blink {{
-        0%, 100% {{ opacity: 1; }}
-        50% {{ opacity: 0.4; }}
-    }}
-    @keyframes shimmer {{
-        0% {{ background-position: -200% center; }}
-        100% {{ background-position: 200% center; }}
-    }}
-    @keyframes pulse-glow {{
-        0%, 100% {{ 
-            box-shadow: 0 0 8px rgba(255, 153, 51, 0.5), 0 0 16px rgba(19, 136, 8, 0.3);
-        }}
-        50% {{ 
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.8), 0 0 32px rgba(19, 136, 8, 0.6), 0 0 40px rgba(255, 215, 0, 0.5);
-        }}
-    }}
-    @keyframes float-gentle {{
-        0%, 100% {{ transform: translateY(0); }}
-        50% {{ transform: translateY(-3px); }}
-    }}
-    .sih-badge {{
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 14px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        color: #1a1a1a;
-        background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00, #FFD700);
-        background-size: 300% 300%;
-        animation: float-gentle 3s ease-in-out infinite, pulse-glow 2.5s ease-in-out infinite, shimmer 3s ease infinite;
-        border: 2px solid rgba(255,215,0,0.5);
-        box-shadow: 0 4px 16px rgba(255, 153, 51, 0.3);
-        cursor: default;
-        transition: all 0.3s ease;
-    }}
-    .sih-badge:hover {{
-        transform: scale(1.05);
-        box-shadow: 0 8px 24px rgba(255, 215, 0, 0.5), 0 0 32px rgba(255, 153, 51, 0.4);
-    }}
-    .sih-badge::before {{
-        content: "🏆";
-        font-size: 1rem;
-        animation: float-gentle 2s ease-in-out infinite;
-    }}
-    .sih-badge::after {{
-        content: "2026";
-        background: linear-gradient(135deg, #FF9933, #138808);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-weight: 800;
-        font-size: 0.85rem;
-    }}
-    @keyframes shimmer {{
-        0% {{ background-position: -200% center; }}
-        100% {{ background-position: 200% center; }}
-    }}
-    @keyframes pulse-glow {{
-        0%, 100% {{ 
-            box-shadow: 0 0 8px rgba(255, 153, 51, 0.5), 0 0 16px rgba(19, 136, 8, 0.3);
-        }}
-        50% {{ 
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.8), 0 0 32px rgba(19, 136, 8, 0.6), 0 0 40px rgba(255, 215, 0, 0.5);
-        }}
-    }}
-    @keyframes float-gentle {{
-        0%, 100% {{ transform: translateY(0); }}
-        50% {{ transform: translateY(-3px); }}
-    }}
-</style>
-
-<div class="header">
-    <div class="header-left">
-        <div class="logo">🏛️</div>
-        <div>
-            <div class="title">IP-SAKTI Sahayak</div>
-            <div class="subtitle">Ministry of Ayush • Intellectual Property Rights Assistant</div>
-        </div>
-    </div>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <div class="juris-badge {juris_class}">{juris_label}</div>
-        <span class="sih-badge" title="Smart India Hackathon 2026 - Team NEXUS">
-            SIH
-        </span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# Voice controls at top
 if st.session_state.voice_mode:
-    st.components.v1.html(get_voice_controls_html(), height=60)
+    st.components.v1.html(get_voice_controls_html(), height=64)
 
-# ============================================================
-# FILE UPLOADER (for OCR/PDF extraction)
-# ============================================================
-with st.expander("📁 Upload Document for Analysis (PDF/Image/Text)", expanded=False):
+# ---------------- Document upload ----------------
+with st.expander("📁 Upload Document for Analysis (PDF / Image / Text)", expanded=st.session_state.show_uploader):
     uploaded = st.file_uploader(
         "Upload patent documents, diagrams, or images for text extraction",
         type=["pdf", "png", "jpg", "jpeg", "txt"],
         accept_multiple_files=True,
-        key="file_uploader"
+        key="file_uploader",
     )
-    
     if uploaded:
         for file in uploaded:
             if file.name not in [f["name"] for f in st.session_state.uploaded_files]:
                 with st.spinner(f"Processing {file.name}..."):
-                    result = process_uploaded_file(file)
-                    st.session_state.uploaded_files.append(result)
-        
+                    st.session_state.uploaded_files.append(process_uploaded_file(file))
         st.success(f"Processed {len(uploaded)} file(s)")
-    
-    # Show processed files
-    if st.session_state.uploaded_files:
-        st.markdown("**Processed Files:**")
-        for f in st.session_state.uploaded_files:
-            col1, col2 = st.columns([4, 1])
-            with col1:
-                icon = "📄" if f["type"] == "application/pdf" else "🖼️" if f["type"].startswith("image/") else "📝"
-                st.markdown(f"<div class='file-item'><div class='file-info'><span class='file-icon'>{icon}</span><div>{f['name']} ({f.get('pages', 1)} pages)</div></div></div>", unsafe_allow_html=True)
-            with col2:
-                if st.button("🗑️", key=f"del_{f['name']}"):
-                    st.session_state.uploaded_files = [x for x in st.session_state.uploaded_files if x["name"] != f["name"]]
-                    st.rerun()
-        
-        # Show extracted text
-        for f in st.session_state.uploaded_files:
-            if f["text"]:
-                with st.expander(f"📝 Extracted Text: {f['name']}", expanded=False):
-                    st.text_area("", f["text"][:2000] + ("..." if len(f["text"]) > 2000 else ""), height=150, key=f"text_{f['name']}")
-                    if st.button("➕ Add to Query Context", key=f"add_{f['name']}"):
-                        st.session_state.messages.append({
-                            "role": "user",
-                            "content": f"[Document: {f['name']}]\n{f['text'][:3000]}"
-                        })
-                        st.rerun()
 
-# ============================================================
-# QUICK ACTIONS (if empty)
-# ============================================================
+    for f in st.session_state.uploaded_files:
+        c1, c2 = st.columns([5, 1])
+        with c1:
+            icon = "📄" if f["type"] == "application/pdf" else ("🖼️" if f["type"].startswith("image/") else "📝")
+            st.markdown(f"<div class='doc'><span>{icon}</span><span>{escape(f['name'])} ({f.get('pages', 1)} pages)</span></div>", unsafe_allow_html=True)
+        with c2:
+            if st.button("🗑️", key=f"del_{f['name']}"):
+                st.session_state.uploaded_files = [x for x in st.session_state.uploaded_files if x["name"] != f["name"]]
+                st.rerun()
+        if f.get("text"):
+            with st.expander(f"📝 Extracted: {f['name']}", expanded=False):
+                st.text_area("", f["text"][:2000] + ("..." if len(f["text"]) > 2000 else ""), height=150, key=f"text_{f['name']}")
+
+# ---------------- Hero (empty state) ----------------
 if not st.session_state.messages:
     st.markdown("""
-    <div style="text-align:center; padding:2rem 0 1rem;">
-        <h3 style="color:#ccc; font-weight:500; margin-bottom:0.3rem;">How can I help you today?</h3>
-        <p style="color:#666; font-size:0.9rem;">Ask about patents, biodiversity, traditional knowledge, international treaties...</p>
+    <div class="hero">
+        <div class="hero-eyebrow"><span class="dot"></span> RAG + Groq • Live Knowledge Base</div>
+        <h1>Ask anything about <span class="grad">Intellectual Property</span></h1>
+        <p>Indian Patents Act, Biodiversity Act, Traditional Knowledge, WIPO, Nagoya Protocol &amp; TRIPS — answered with cited sources.</p>
     </div>
+    <div class="sugg-label">Try asking</div>
     """, unsafe_allow_html=True)
-    
+
     q1, q2, q3, q4 = st.columns(4)
     questions = [
         ("📜 Section 3(p)", "What is Section 3(p) of the Indian Patents Act?"),
@@ -423,200 +529,132 @@ if not st.session_state.messages:
         ("🌱 Biodiversity Act", "What does the Biodiversity Act cover?"),
     ]
     for i, (label, q) in enumerate(questions):
-        with [q1,q2,q3,q4][i]:
+        with [q1, q2, q3, q4][i]:
             if st.button(label, use_container_width=True, key=f"q{i}"):
                 st.session_state.messages.append({"role": "user", "content": q})
                 st.rerun()
 
-# ============================================================
-# MESSAGES
-# ============================================================
+    st.markdown("""
+    <div class="cap-row">
+        <span>🎤 Voice input</span><span>📄 PDF reports</span>
+        <span>🖼️ Image OCR</span><span>📚 Cited sources</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def render_sources(sources):
+    st.markdown('<div class="sources"><div class="sources-label">📚 Sources</div>', unsafe_allow_html=True)
+    for src in sources:
+        page = src.get("page", "N/A")
+        jkey = src.get("jurisdiction", "")
+        jval = jkey.upper()
+        section = src.get("section", "")
+        preview = src.get("content_preview", "")[:140]
+        source_name = src.get("source", "Unknown")
+        badge = f'<span class="tag tag-{jkey}">{jval}</span>' if jval else ""
+        sec = f"<span>§ {escape(section)}</span>" if section else ""
+        st.markdown(
+            '<div class="source-item">'
+            f'<div class="source-file">📄 {escape(source_name)}</div>'
+            f'<div class="source-meta"><span>Page {escape(str(page))}</span>{badge}{sec}</div>'
+            f'<div class="source-preview">"{escape(preview)}..."</div>'
+            "</div>",
+            unsafe_allow_html=True,
+        )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# ---------------- Messages ----------------
 for idx, msg in enumerate(st.session_state.messages):
     if msg["role"] == "user":
-        st.markdown(f"""
-        <div class="msg msg-user">
-            <div class="avatar avatar-user">👤</div>
-            <div class="bubble">{escape(msg["content"])}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            '<div class="msg msg-user"><div class="avatar avatar-user">👤</div>'
+            f'<div class="bubble">{escape(msg["content"])}</div></div>',
+            unsafe_allow_html=True,
+        )
     else:
-        st.markdown(f"""
-        <div class="msg msg-bot">
-            <div class="avatar avatar-bot">🏛️</div>
-            <div class="bubble">{msg["content"]}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Action buttons for bot messages
-        col1, col2, col3 = st.columns([1, 1, 4])
-        with col1:
-            if PDF_AVAILABLE and st.button("📄 Save as PDF", key=f"pdf_{idx}", use_container_width=True):
+        st.markdown(
+            '<div class="msg msg-bot"><div class="avatar avatar-bot">🏛️</div>'
+            f'<div class="bubble">{msg["content"]}</div></div>',
+            unsafe_allow_html=True,
+        )
+        b1, b2, _ = st.columns([1.2, 1.2, 5])
+        with b1:
+            if PDF_AVAILABLE and st.button("📄 PDF", key=f"pdf_{idx}", use_container_width=True):
                 user_q = next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), "Query")
                 pdf_bytes = generate_patent_report(
-                    query=user_q,
-                    answer=msg["content"],
-                    sources=msg.get("sources", []),
-                    jurisdiction=st.session_state.jurisdiction
+                    query=user_q, answer=msg["content"],
+                    sources=msg.get("sources", []), jurisdiction=st.session_state.jurisdiction,
                 )
                 st.download_button(
-                    "⬇️ Download",
-                    data=pdf_bytes,
+                    "⬇️ Download", data=pdf_bytes,
                     file_name=f"IP_SAKTI_Answer_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                    mime="application/pdf",
-                    key=f"dl_{idx}"
+                    mime="application/pdf", key=f"dl_{idx}",
                 )
-        with col2:
+        with b2:
             if st.session_state.voice_mode and st.button("🔊 Speak", key=f"speak_{idx}", use_container_width=True):
-                st.components.v1.html(f"""
-                <script>
-                    speakText(`{msg["content"][:500].replace('`', '\\`').replace('"', '\\"')}`);
-                </script>
-                """, height=0)
-        
+                safe = msg["content"][:500].replace("`", "'").replace('"', "'")
+                st.components.v1.html(f"<script>speakText(`{safe}`);</script>", height=0)
         if msg.get("sources"):
-            st.markdown('<div class="sources"><div class="sources-label">📚 Sources</div>', unsafe_allow_html=True)
-            for src in msg["sources"]:
-                page = src.get('page', 'N/A')
-                juris_val = src.get('jurisdiction', '').upper()
-                section = src.get('section', '')
-                preview = src.get('content_preview', '')[:140]
-                source_name = src.get('source', 'Unknown')
-                badge = f'<span class="tag tag-{src.get("jurisdiction","")}">{juris_val}</span>' if juris_val else ''
-                sec = f'<span>§ {section}</span>' if section else ''
-                
-                st.markdown(f"""
-                <div class="source-item">
-                    <div class="source-file">📄 {source_name}</div>
-                    <div class="source-meta">
-                        <span>Page {page}</span>
-                        {badge}
-                        {sec}
-                    </div>
-                    <div class="source-preview">"{preview}..."</div>
-                </div>
-                """, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            render_sources(msg["sources"])
 
-# ============================================================
-# CHAT INPUT TOOLBAR
-# ============================================================
-st.markdown("""
-<div style="position: fixed; bottom: 7.5rem; left: 50%; transform: translateX(-50%); 
-            width: 100%; max-width: 900px; z-index: 998; 
-            display: flex; justify-content: center; gap: 0.5rem; padding: 0 1rem;">
-    <button class="toolbar-btn" title="Attach File" onclick="document.getElementById('file_uploader').click()">
-        📎
-    </button>
-    <button class="toolbar-btn" title="Voice Input" onclick="startVoiceInput()">
-        🎤
-    </button>
-    <button class="toolbar-btn" title="New Chat" onclick="window.location.reload()">
-        ➕
-    </button>
-</div>
+# ---------------- Toolbar + input ----------------
+t1, t2, t3 = st.columns([1, 1, 1])
+with t1:
+    if st.button("📎 Attach file", use_container_width=True, key="tb_attach"):
+        st.session_state.show_uploader = not st.session_state.show_uploader
+        st.rerun()
+with t2:
+    vlabel = "🔴 Voice ON" if st.session_state.voice_mode else "🎤 Voice"
+    if st.button(vlabel, use_container_width=True, key="tb_voice"):
+        st.session_state.voice_mode = not st.session_state.voice_mode
+        st.rerun()
+with t3:
+    if st.button("✨ New chat", use_container_width=True, key="tb_new"):
+        st.session_state.messages = []
+        st.rerun()
 
-<style>
-.toolbar-btn {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    color: #ccc;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.toolbar-btn:hover {
-    border-color: #FF9933;
-    background: #222;
-    transform: scale(1.05);
-}
-</style>
-""", unsafe_allow_html=True)
-
-# ============================================================
-# CHAT INPUT
-# ============================================================
 if prompt := st.chat_input("Ask about Patents Act, Biodiversity Act, WIPO, Nagoya Protocol, TKDL..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.rerun()
 
-# ============================================================
-# PROCESS USER MESSAGE
-# ============================================================
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_msg = st.session_state.messages[-1]["content"]
-    
-    # Include uploaded file context if any
-    file_context = ""
-    for f in st.session_state.uploaded_files:
-        if f["text"]:
-            file_context += f"\n\n[Document: {f['name']}]\n{f['text'][:2000]}"
-    
-    full_query = last_msg + file_context
-    
+    file_context = "".join(
+        f"\n\n[Document: {f['name']}]\n{f['text'][:2000]}"
+        for f in st.session_state.uploaded_files if f.get("text")
+    )
     with st.chat_message("assistant"):
-        with st.spinner("Searching knowledge base..."):
-            result = query_rag(full_query, st.session_state.jurisdiction)
+        st.markdown(
+            '<div class="thinking"><span class="dots"><span></span><span></span><span></span></span>'
+            "Searching knowledge base…</div>",
+            unsafe_allow_html=True,
+        )
+        result = query_rag(last_msg + file_context, st.session_state.jurisdiction)
         st.write(result["answer"])
-        
-        # Action buttons
-        col1, col2 = st.columns([1, 5])
-        with col1:
-            if PDF_AVAILABLE and st.button("📄 Save as PDF", key="pdf_new", use_container_width=True):
-                pdf_bytes = generate_patent_report(
-                    query=last_msg,
-                    answer=result["answer"],
-                    sources=result["sources"],
-                    jurisdiction=st.session_state.jurisdiction
-                )
-                st.download_button(
-                    "⬇️ Download Report",
-                    data=pdf_bytes,
-                    file_name=f"IP_SAKTI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                    mime="application/pdf",
-                    key="dl_new"
-                )
-        
+        if PDF_AVAILABLE and st.button("📄 Save as PDF", key="pdf_new", use_container_width=True):
+            pdf_bytes = generate_patent_report(
+                query=last_msg, answer=result["answer"],
+                sources=result["sources"], jurisdiction=st.session_state.jurisdiction,
+            )
+            st.download_button(
+                "⬇️ Download Report", data=pdf_bytes,
+                file_name=f"IP_SAKTI_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
+                mime="application/pdf", key="dl_new",
+            )
         if result["sources"]:
-            st.markdown('<div class="sources"><div class="sources-label">📚 Sources</div>', unsafe_allow_html=True)
-            for src in result["sources"]:
-                page = src.get('page', 'N/A')
-                juris_val = src.get('jurisdiction', '').upper()
-                section = src.get('section', '')
-                preview = src.get('content_preview', '')[:140]
-                source_name = src.get('source', 'Unknown')
-                badge = f'<span class="tag tag-{src.get("jurisdiction","")}">{juris_val}</span>' if juris_val else ''
-                sec = f'<span>§ {section}</span>' if section else ''
-                st.markdown(f"""
-                <div class="source-item">
-                    <div class="source-file">📄 {source_name}</div>
-                    <div class="source-meta">
-                        <span>Page {page}</span>
-                        {badge}
-                        {sec}
-                    </div>
-                    <div class="source-preview">"{preview}..."</div>
-                </div>
-                """, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-    
+            render_sources(result["sources"])
+
     st.session_state.messages.append({
         "role": "assistant",
         "content": result["answer"],
-        "sources": result["sources"]
+        "sources": result["sources"],
     })
     st.rerun()
 
-# ============================================================
-# FOOTER
-# ============================================================
+# ---------------- Footer ----------------
 st.markdown("""
 <div class="footer">
-    <strong>Team NEXUS</strong> | <span class="sih">SIH 2026</span> | Ministry of Ayush
+    <strong>Team NEXUS</strong><span class="tri"></span><span class="sih">SIH 2026</span><span class="tri"></span>Ministry of Ayush
 </div>
 """, unsafe_allow_html=True)
