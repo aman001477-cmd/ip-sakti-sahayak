@@ -131,13 +131,9 @@ A. SERIOUS IP QUESTIONS (patents, biodiversity, TK, GI, treaties, cases, filing,
 7. Provide comprehensive details for patent-related queries (filing process, requirements, fees, timelines, sections).
 8. Structure answers clearly with headings/bullets where appropriate.
 
-B. CASUAL / JOKE / OFF-TOPIC QUESTIONS (timepass, movies, cricket, love life, "tum kaun ho", insults, bakchodi):
-1. MATCH THE USER'S ENERGY: reply in the same language and tone (Hindi, Hinglish, or English).
-2. Be witty and playful — clean, light-hearted roasting is welcome, like friends teasing each other.
-3. NEVER be abusive: no gaali, no hate speech, no personal attacks, no vulgarity. Roast the topic or the situation, keep it clean and fun.
-4. Keep it SHORT (2-4 lines).
-5. End by redirecting to your expertise with a smile (patents, Section 3(d), Neem case, Nagoya, etc.).
-6. If the user teases or insults you, take it sportingly, fire back ONE clean witty line, then redirect.
+B. NON-IP QUESTIONS reaching this prompt (rare — most are answered in general mode):
+1. Do NOT force legal framing or fake citations; answer helpfully from general knowledge, briefly.
+2. If playful/casual, match energy: witty, clean, short (2-4 lines).
 
 C. IDENTITY / TEAM QUESTIONS (who made you, your team, members, SIH, NIELIT):
 Answer warmly with these EXACT facts: you are IP-SAKTI Sahayak, built by Team NEXUS for SIH (Smart India Hackathon) 2026 at NIELIT Gorakhpur. Team Leader: Aman. Members: Priyanshu, Shubham, Amarjeet, Anuradha, Mansi. Keep it short, then offer IP help.
@@ -176,6 +172,50 @@ def search_web(query: str) -> str:
     return ""
 
 
+IP_KEYWORDS = (
+    "patent", "ipr", "intellectual property", "trademark", "trade mark",
+    "copyright", "geographical indication", "gi tag", "biodiversity",
+    "biological diversity", "traditional knowledge", "tkdl", "ayush",
+    "ayurveda", "siddha", "unani", "wipo", "trips agreement", "cbd",
+    "nagoya", "pct", "upov", "ppvfr", "farmers variety", "plant variety",
+    "gene fund", "benefit sharing", "access and benefit",
+    "section 3", "section 6", "section 8", "section 10", "section 25",
+    "section 39", "section 84", "section 92", "section 100", "section 107",
+    "section 133", "form 1", "form 2", "form 3", "form 18", "form 26",
+    "form 27", "evergreening", "efficacy", "compulsory licen", "biopiracy",
+    "novelty", "inventive step", "prior art", "infringement", "opposition",
+    "claims", "specification", "turmeric", "neem", "basmati", "glivec",
+    "gleevec", "novartis", "natco", "nexavar", "sorafenib", "roche",
+    "cipla", "tarceva", "ferid allani", "hoodia", "teff", "ayahuasca",
+    "jeevani", "arogyapacha", "kani tribe", "darjeeling", "alphonso",
+    "pashmina", "paris convention", "cartagena", "bonn", "doha",
+    "genetic resources", "gratk", "biotech", "micro-organism",
+    "software patent", "ai patent", "first examination", "controller general",
+    "ipab", "biological material", "designs act", "industrial design",
+    "well-known mark", "passing off", "plant breeder", "national phase",
+    "convention country",
+)
+
+GENERAL_TEMPLATE = """You are IP-SAKTI Sahayak, a friendly AI assistant with a sharp desi wit (built by Team NEXUS for SIH 2026). You are a patent-law expert, but right now the user asks something OUTSIDE your legal library — answer it anyway, helpfully and well.
+
+RULES:
+1. ANSWER the question directly from your general knowledge (facts, explanations, how-tos, opinions, fun chat — whatever fits).
+2. Match the user's language and tone (Hindi, Hinglish, or English). If playful, be witty back.
+3. NEVER abusive: no gaali, hate, personal attacks, or vulgarity. Clean roast only.
+4. Short answers for casual chat (2-5 lines); fuller answers for knowledge questions.
+5. Do NOT invent legal citations or fake sources.
+6. End with ONE short line pointing to your IP expertise (patents, Section 3(d), Neem case, Nagoya...) only where it feels natural.
+
+Question: {question}
+
+Answer:"""
+
+
+def _is_ip_question(text: str) -> bool:
+    low = text.lower()
+    return any(k in low for k in IP_KEYWORDS)
+
+
 CACHE_FILE = "answer_cache.json"
 CACHE_MAX_ENTRIES = 300
 
@@ -208,6 +248,7 @@ class RAGPipeline:
     def __init__(self):
         self.vectorstore = None
         self.qa_chain = None
+        self.llm = None
         self._initialize()
     
     def _initialize(self):
@@ -226,6 +267,7 @@ class RAGPipeline:
                 temperature=TEMPERATURE,
                 max_tokens=MAX_TOKENS
             )
+            self.llm = llm
             
             prompt = PromptTemplate(
                 template=PROMPT_TEMPLATE,
@@ -267,6 +309,21 @@ class RAGPipeline:
         if key in cache:
             hit = cache[key]
             return {"answer": hit["answer"], "sources": hit.get("sources", []), "cached": True}
+
+        # Non-IP questions: answer from general knowledge (no RAG, no fake citations)
+        if not _is_ip_question(question):
+            try:
+                resp = self.llm.invoke(GENERAL_TEMPLATE.format(question=question))
+                text = getattr(resp, "content", str(resp))
+            except Exception as e:
+                error_msg = str(e)
+                logger.error("General query failed: %s", error_msg)
+                if "429" in error_msg or "rate_limit" in error_msg.lower():
+                    return {"answer": "⚠️ Free API limit reached. Please wait about a minute and try again.", "sources": []}
+                return {"answer": "⚠️ Something went wrong. Please try again.", "sources": []}
+            cache[key] = {"answer": text, "sources": []}
+            _save_cache(cache)
+            return {"answer": text, "sources": [], "cached": False}
 
         try:
             retriever_kwargs = {"k": TOP_K}
