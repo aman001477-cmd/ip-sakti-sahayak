@@ -725,27 +725,37 @@ if not st.session_state.messages:
 
 
 def render_sources(sources):
-    st.markdown('<div class="sources"><div class="sources-label">📚 Sources</div>', unsafe_allow_html=True)
-    for rank, src in enumerate(sources):
-        page = src.get("page", "N/A")
-        jkey = src.get("jurisdiction", "")
-        jval = jkey.upper()
-        section = src.get("section", "")
-        preview = src.get("content_preview", "")[:140]
-        source_name = src.get("source", "Unknown")
-        badge = f'<span class="tag tag-{jkey}">{jval}</span>' if jval else ""
-        sec = f"<span>§ {escape(section)}</span>" if section else ""
-        rel_w = max(58, 97 - rank * 9)
-        st.markdown(
-            '<div class="source-item">'
-            f'<div class="source-file">📄 {escape(source_name)}</div>'
-            f'<div class="source-meta"><span>Page {escape(str(page))}</span>{badge}{sec}</div>'
-            f'<div class="source-preview">"{escape(preview)}..."</div>'
-            f'<div class="rel"><span style="width:{rel_w}%"></span></div>'
-            "</div>",
-            unsafe_allow_html=True,
-        )
-    st.markdown("</div>", unsafe_allow_html=True)
+    seen, unique = set(), []
+    for s in sources:
+        key = (s.get("source"), s.get("page"))
+        if key not in seen:
+            seen.add(key)
+            unique.append(s)
+    sources = unique
+    if not sources:
+        return
+    with st.expander(f"📚 Sources ({len(sources)})", expanded=False):
+        st.markdown('<div class="sources"><div class="sources-label">Verified references</div>', unsafe_allow_html=True)
+        for rank, src in enumerate(sources):
+            page = src.get("page", "N/A")
+            jkey = src.get("jurisdiction", "")
+            jval = jkey.upper()
+            section = src.get("section", "")
+            preview = src.get("content_preview", "")[:140]
+            source_name = src.get("source", "Unknown")
+            badge = f'<span class="tag tag-{jkey}">{jval}</span>' if jval else ""
+            sec = f"<span>§ {escape(section)}</span>" if section else ""
+            rel_w = max(58, 97 - rank * 9)
+            st.markdown(
+                '<div class="source-item">'
+                f'<div class="source-file">📄 {escape(source_name)}</div>'
+                f'<div class="source-meta"><span>Page {escape(str(page))}</span>{badge}{sec}</div>'
+                f'<div class="source-preview">"{escape(preview)}..."</div>'
+                f'<div class="rel"><span style="width:{rel_w}%"></span></div>'
+                "</div>",
+                unsafe_allow_html=True,
+            )
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 FOLLOWUP_MAP = [

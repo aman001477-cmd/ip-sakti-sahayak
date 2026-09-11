@@ -17,7 +17,7 @@ PERSIST_DIR = "vector_db/chroma_data"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 LLM_MODEL = "qwen/qwen3.8-27b"
 TOP_K = 3
-TEMPERATURE = 0.1
+TEMPERATURE = 0.35
 MAX_TOKENS = 800  # Groq free on_demand tier allows max 1000 output tokens/min
 
 # Simple greetings answered locally (no API call → saves quota)
@@ -130,6 +130,7 @@ A. SERIOUS IP QUESTIONS (patents, biodiversity, TK, GI, treaties, cases, filing,
 6. For jurisdiction-specific questions, prioritize documents from that jurisdiction.
 7. Provide comprehensive details for patent-related queries (filing process, requirements, fees, timelines, sections).
 8. Structure answers clearly with headings/bullets where appropriate.
+9. Vary your phrasing, openings and structure naturally across answers — never sound templated or repetitive.
 
 B. NON-IP QUESTIONS reaching this prompt (rare — most are answered in general mode):
 1. Do NOT force legal framing or fake citations; answer helpfully from general knowledge, briefly.
@@ -278,8 +279,8 @@ class RAGPipeline:
                 llm=llm,
                 chain_type="stuff",
                 retriever=self.vectorstore.as_retriever(
-                    search_type="similarity",
-                    search_kwargs={"k": TOP_K}
+                    search_type="mmr",
+                    search_kwargs={"k": TOP_K, "fetch_k": 10}
                 ),
                 chain_type_kwargs={"prompt": prompt},
                 return_source_documents=True,
@@ -326,12 +327,12 @@ class RAGPipeline:
             return {"answer": text, "sources": [], "cached": False}
 
         try:
-            retriever_kwargs = {"k": TOP_K}
+            retriever_kwargs = {"k": TOP_K, "fetch_k": 10}
             if jurisdiction:
                 retriever_kwargs["filter"] = {"jurisdiction": jurisdiction}
-            
+
             retriever = self.vectorstore.as_retriever(
-                search_type="similarity",
+                search_type="mmr",
                 search_kwargs=retriever_kwargs
             )
             self.qa_chain.retriever = retriever
