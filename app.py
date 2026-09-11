@@ -510,6 +510,24 @@ div[data-testid="stRadio"] label:hover { border-color: rgba(255,153,51,.5) !impo
 </style>
 """, unsafe_allow_html=True)
 
+@st.dialog("📲 Install IP-SAKTI as an App")
+def _install_dialog():
+    try:
+        st.image("assets/icon-192.png", width=96)
+    except Exception:
+        pass
+    st.markdown("""
+    **Android (Chrome):**
+    1. Tap **⋮ menu** → **Add to Home screen** → **Install**
+    2. The IP-SAKTI icon appears on your home screen and opens full-screen, just like an app.
+
+    **iPhone (Safari):**
+    1. Tap **Share** → **Add to Home Screen** → **Add**
+    """)
+    if st.button("Got it! 👍", key="install_ok"):
+        st.rerun()
+
+
 # ---------------- Sidebar ----------------
 with st.sidebar:
     st.markdown("""
@@ -565,6 +583,9 @@ with st.sidebar:
     st.session_state.jurisdiction = juris
     st.markdown("</div>", unsafe_allow_html=True)
 
+    if st.button("📲 Install App", use_container_width=True, key="open_install"):
+        _install_dialog()
+        st.rerun()
     st.markdown("<div class='side-sec'><span class='side-lbl'>🎤 Voice</span>", unsafe_allow_html=True)
     st.caption("🎤 mic in the chat bar = speak • 🔊 on answers = listen")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -633,6 +654,10 @@ st.markdown(
     "</div>",
     unsafe_allow_html=True,
 )
+
+if not st.session_state.get("install_popup_seen", False):
+    st.session_state.install_popup_seen = True
+    _install_dialog()
 
 # ---------------- Document upload ----------------
 with st.expander("📁 Upload Document for Analysis (PDF / Image / Text)", expanded=st.session_state.show_uploader):
