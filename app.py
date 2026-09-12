@@ -817,11 +817,24 @@ def get_followups(question: str, answer: str) -> list:
     for keywords, suggestions in FOLLOWUP_MAP:
         if any(k in text for k in keywords):
             return suggestions[:3]
-    return [
-        "What is Section 3(p) of the Indian Patents Act?",
-        "Can I patent a Neem-based formulation?",
-        "What is the Nagoya Protocol?",
+    fallbacks = [
+        [
+            "What is Section 3(p) of the Indian Patents Act?",
+            "Can I patent a Neem-based formulation?",
+            "What is the Nagoya Protocol?",
+        ],
+        [
+            "What was the Novartis Glivec judgment?",
+            "What is a GI tag? Tell me about Darjeeling tea",
+            "How do I file a patent in India?",
+        ],
+        [
+            "What is the Jeevani benefit-sharing story?",
+            "Can software be patented in India?",
+            "What is the WIPO GRATK treaty 2024?",
+        ],
     ]
+    return fallbacks[abs(hash(question)) % 3]
 
 
 def log_feedback(question: str, rating: int):
@@ -901,17 +914,18 @@ for idx, msg in enumerate(st.session_state.messages):
                     user_q = next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), "")
                     log_feedback(user_q, -1)
                     st.toast("Noted 👎 — we'll improve.")
-            st.markdown("<div style='font-size:.72rem;color:#666;margin:.4rem 0 .3rem;'>💡 Go deeper:</div>", unsafe_allow_html=True)
-            fq = get_followups(
-                next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), ""),
-                msg["content"],
-            )
-            fq_cols = st.columns(3)
-            for j, suggestion in enumerate(fq):
-                with fq_cols[j]:
-                    if st.button(suggestion, key=f"fq_{idx}_{j}", use_container_width=True):
-                        st.session_state.messages.append({"role": "user", "content": suggestion})
-                        st.rerun()
+            if msg.get("sources"):
+                st.markdown("<div style='font-size:.72rem;color:#666;margin:.4rem 0 .3rem;'>💡 Go deeper:</div>", unsafe_allow_html=True)
+                fq = get_followups(
+                    next((m["content"] for m in reversed(st.session_state.messages[:idx]) if m["role"] == "user"), ""),
+                    msg["content"],
+                )
+                fq_cols = st.columns(3)
+                for j, suggestion in enumerate(fq):
+                    with fq_cols[j]:
+                        if st.button(suggestion, key=f"fq_{idx}_{j}", use_container_width=True):
+                            st.session_state.messages.append({"role": "user", "content": suggestion})
+                            st.rerun()
 
 # ---------------- Unified chat bar: attach + input + mic + send in ONE box ----------------
 with st.container(border=True):
