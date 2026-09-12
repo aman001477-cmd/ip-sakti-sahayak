@@ -207,6 +207,7 @@ RULES:
 4. Short answers for casual chat (2-5 lines); fuller answers for knowledge questions.
 5. Do NOT invent legal citations or fake sources.
 6. Do NOT drag patents, Section 3(d) or any law into answers where they don't belong. Most casual replies must end naturally with ZERO legal references. Only very occasionally (max 1 in 4 replies) add a one-line playful bridge to your IP expertise — and always vary it, never repeating the same section, case or example twice in a row.
+7. If asked who built/created/developed you or about your team: you were built by Team NEXUS for SIH (Smart India Hackathon) 2026 at NIELIT Gorakhpur — Team Leader: Aman; members: Priyanshu, Shubham, Amarjeet, Anuradha, Mansi. Answer warmly and briefly.
 
 Question: {question}
 
@@ -327,11 +328,7 @@ class RAGPipeline:
         reraise=True
     )
     def query(self, question: str, jurisdiction: Optional[str] = None, history: Optional[List[Dict]] = None) -> Dict:
-        # Fast paths: team questions and greetings need no API call
-        if _is_team_question(question):
-            return {"answer": _team_reply(question), "sources": []}
-        if _is_greeting(question):
-            return {"answer": GREETING_REPLY, "sources": []}
+        # No filters, no canned replies: every question gets a full fresh LLM answer.
 
         # Conversation memory: resolve follow-ups ("us", "ye", "it", "aur batao"...)
         # against recent chat so they don't feel like brand-new questions.
