@@ -131,6 +131,7 @@ A. SERIOUS IP QUESTIONS (patents, biodiversity, TK, GI, treaties, cases, filing,
 7. Provide comprehensive details for patent-related queries (filing process, requirements, fees, timelines, sections).
 8. Structure answers clearly with headings/bullets where appropriate.
 9. Vary your phrasing, openings and structure naturally across answers — never sound templated or repetitive.
+10. Never invent specific dates, amounts, section wordings or case citations — use ONLY what appears in the context; if a detail is absent, say so instead of guessing.
 
 B. NON-IP QUESTIONS reaching this prompt (rare — most are answered in general mode):
 1. Do NOT force legal framing or fake citations; answer helpfully from general knowledge, briefly.
@@ -210,6 +211,34 @@ RULES:
 Question: {question}
 
 Answer:"""
+
+
+FOLLOWUP_MARKERS = (
+    "us ", "usme", "usne", "uska", "uski", "usko", "unka", "unki",
+    "is ", "isme", "iska", "iski", "isko", "ye ", "yeh",
+    "vo ", "wo ", "woh", "it ", "its", "this", "that",
+    "these", "those", "he ", "she ", "they ", "him ", "her ",
+    "aur batao", "aur kya", "matlab", "kyu", "kyun",
+    "explain", "detail", "example", "aur ",
+)
+
+
+def _is_followup(text: str) -> bool:
+    low = " " + text.lower() + " "
+    if len(text.split()) <= 10:
+        return True
+    return any(m in low for m in FOLLOWUP_MARKERS)
+
+
+def _history_block(history: Optional[List[Dict]]) -> str:
+    if not history:
+        return ""
+    lines = []
+    for m in history[-4:]:
+        role = "User" if m.get("role") == "user" else "Assistant"
+        content = str(m.get("content", ""))[:300].replace("\n", " ")
+        lines.append(f"{role}: {content}")
+    return "\n".join(lines)
 
 
 def _is_ip_question(text: str) -> bool:
@@ -297,24 +326,35 @@ class RAGPipeline:
         retry=retry_if_exception(_is_retryable),
         reraise=True
     )
-    def query(self, question: str, jurisdiction: Optional[str] = None) -> Dict:
+    def query(self, question: str, jurisdiction: Optional[str] = None, history: Optional[List[Dict]] = None) -> Dict:
         # Fast paths: team questions and greetings need no API call
         if _is_team_question(question):
             return {"answer": _team_reply(question), "sources": []}
         if _is_greeting(question):
             return {"answer": GREETING_REPLY, "sources": []}
 
+        # Conversation memory: resolve follow-ups ("us", "ye", "it", "aur batao"...)
+        # against recent chat so they don't feel like brand-new questions.
+        hist_block = _history_block(history)
+        if hist_block and _is_followup(question):
+            effective = (
+                "[Conversation so far]\n" + hist_block +
+                "\n\nCurrent question (it may refer to the above conversation): " + question
+            )
+        else:
+            effective = question
+
         # Answer cache: instant replies for repeated questions (zero Groq quota)
-        key = _cache_key(question, jurisdiction)
+        key = _cache_key(effective, jurisdiction)
         cache = _load_cache()
         if key in cache:
             hit = cache[key]
             return {"answer": hit["answer"], "sources": hit.get("sources", []), "cached": True}
 
         # Non-IP questions: answer from general knowledge (no RAG, no fake citations)
-        if not _is_ip_question(question):
+        if not _is_ip_question(effective):
             try:
-                resp = self.llm.invoke(GENERAL_TEMPLATE.format(question=question))
+                resp = self.llm.invoke(GENERAL_TEMPLATE.format(question=effective))
                 text = getattr(resp, "content", str(resp))
             except Exception as e:
                 error_msg = str(e)
@@ -337,7 +377,7 @@ class RAGPipeline:
             )
             self.qa_chain.retriever = retriever
             
-            result = self.qa_chain.invoke({"query": question})
+            result = self.qa_chain.invoke({"query": effective})
             
             answer = result.get("result", "")
             source_docs = result.get("source_documents", [])
@@ -393,6 +433,6 @@ def get_rag_pipeline() -> RAGPipeline:
         _rag_pipeline = RAGPipeline()
     return _rag_pipeline
 
-def query_rag(question: str, jurisdiction: Optional[str] = None) -> Dict:
+def query_rag(question: str, jurisdiction: Optional[str] = None, history: Optional[List[Dict]] = None) -> Dict:
     pipeline = get_rag_pipeline()
-    return pipeline.query(question, jurisdiction)
+    return pipeline.query(question, jurisdiction, history)

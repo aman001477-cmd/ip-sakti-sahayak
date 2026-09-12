@@ -989,7 +989,11 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
             "Searching knowledge base…</div>",
             unsafe_allow_html=True,
         )
-        result = query_rag(last_msg + file_context, st.session_state.jurisdiction)
+        hist = [
+            {"role": m["role"], "content": str(m.get("content", ""))[:500]}
+            for m in st.session_state.messages[:-1]
+        ][-4:]
+        result = query_rag(last_msg + file_context, st.session_state.jurisdiction, hist)
         if result.get("cached"):
             st.caption("⚡ Instant answer — served from cache, zero API cost")
 
